@@ -6,28 +6,68 @@ import StudentLogin from './pages/StudentLogin'
 import AdminLogin from './pages/AdminLogin'
 import StudentDashboard from './pages/StudentDashboard'
 import AdminDashboard from './pages/AdminDashboard'
+import MachinesPage from './pages/MachinesPage'
+import CalendarPage from './pages/CalendarPage'
+import SlotsPage from './pages/SlotsPage'
 
 function App() {
+
   return (
+
     <Routes>
-      <Route path="/" element={<LandingPage />} />
 
-      <Route path="/student/register" element={<StudentRegister />} />
+      {/* HOME */}
 
-      <Route path="/student/login" element={<StudentLogin />} />
+      <Route
+        path="/"
+        element={<LandingPage />}
+      />
 
-      <Route path="/admin/login" element={<AdminLogin />} />
+      {/* STUDENT */}
+
+      <Route
+        path="/student/register"
+        element={<StudentRegister />}
+      />
+
+      <Route
+        path="/student/login"
+        element={<StudentLogin />}
+      />
 
       <Route
         path="/student/dashboard"
         element={<StudentDashboard />}
       />
 
+      {/* MACHINES */}
+
+      <Route
+        path="/machines"
+        element={<MachinesPage />}
+      />
+
+      {/* ADMIN */}
+
+      <Route
+        path="/admin/login"
+        element={<AdminLogin />}
+      />
+
       <Route
         path="/admin/dashboard"
         element={<AdminDashboard />}
       />
+   <Route
+  path="/calendar"
+  element={<CalendarPage />}
+/>
+ <Route
+  path="/slots"
+  element={<SlotsPage />}
+/>
     </Routes>
+      
   )
 }
 

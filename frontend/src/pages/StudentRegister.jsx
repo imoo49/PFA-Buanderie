@@ -74,7 +74,7 @@ function StudentRegister() {
             to="/"
             className="text-red-500 text-sm font-semibold"
           >
-            HOME
+            Accueil
           </Link>
 
           <Link
@@ -246,7 +246,9 @@ function StudentRegister() {
               className="text-[#555555] text-[22px]"
               style={{ fontFamily: 'Playpen Sans' }}
             >
-              +123-456-7890
+              +212 708293615 <br>
+              </br>
+              +212 760111165
             </p>
 
           </div>

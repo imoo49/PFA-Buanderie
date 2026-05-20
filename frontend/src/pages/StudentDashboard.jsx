@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
-
+import notificationIcon from '../assets/notification-icon.png'
 import logoBuanderie from '../assets/logo-buanderie.png'
 import logoEnsias from '../assets/logo-ensias.png'
 import profil from '../assets/profil.png'
@@ -109,13 +109,18 @@ function StudentDashboard() {
           <div className="relative">
 
             <button
-              onClick={() =>
-                setShowNotifications(!showNotifications)
-              }
-              className="text-[30px]"
-            >
-              🔔
-            </button>
+  onClick={() =>
+    setShowNotifications(!showNotifications)
+  }
+>
+
+  <img
+    src={notificationIcon}
+    alt="Notifications"
+    className="w-10 h-10 hover:scale-110 transition"
+  />
+
+</button>
 
             {showNotifications && (
 
@@ -230,7 +235,7 @@ function StudentDashboard() {
           className="text-[38px] font-bold text-[#555555]"
           style={{ fontFamily: 'Playpen Sans' }}
         >
-          Bonjour, <span className="text-[#F56B6B]">Malak</span> 👋
+          Bonjour, <span className="text-[#F56B6B]">Malak</span> 
         </h2>
 
         <p className="text-gray-500 mt-1">

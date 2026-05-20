@@ -192,7 +192,7 @@ function AdminDashboard() {
           className="text-[38px] font-bold text-[#555555]"
           style={{ fontFamily: 'Playpen Sans' }}
         >
-          Bonjour Admin 👋
+          Bonjour Admin 
         </h2>
 
         <p className="text-gray-500 mt-1">

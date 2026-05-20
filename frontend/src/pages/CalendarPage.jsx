@@ -7,7 +7,7 @@ import 'react-calendar/dist/Calendar.css'
 import profil from '../assets/profil.png'
 import logoBuanderie from '../assets/logo-buanderie.png'
 import logoEnsias from '../assets/logo-ensias.png'
-
+import notificationIcon from '../assets/notification-icon.png'
 function CalendarPage() {
 
   const [date, setDate] = useState(new Date())
@@ -64,9 +64,19 @@ function CalendarPage() {
 
         <div className="flex items-center gap-5">
 
-          <button className="text-[30px]">
-            🔔
-          </button>
+          <button
+  onClick={() =>
+    setShowNotifications(!showNotifications)
+  }
+>
+
+  <img
+    src={notificationIcon}
+    alt="Notifications"
+    className="w-10 h-10 hover:scale-110 transition"
+  />
+
+</button>
 
           {/* PROFILE */}
 

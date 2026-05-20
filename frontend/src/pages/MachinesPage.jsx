@@ -7,7 +7,7 @@ import logoEnsias from '../assets/logo-ensias.png'
 import washingMachine from '../assets/washing-machine.png'
 import dryerMachine from '../assets/dryer.png'
 import profil from '../assets/profil.png'
-
+import notificationIcon from '../assets/notification-icon.png'
 function MachinesPage() {
 
   const [showProfileMenu, setShowProfileMenu] = useState(false)
@@ -60,9 +60,19 @@ function MachinesPage() {
 
         <div className="flex items-center gap-5 relative">
 
-          <button className="text-[30px]">
-            🔔
-          </button>
+          <button
+  onClick={() =>
+    setShowNotifications(!showNotifications)
+  }
+>
+
+  <img
+    src={notificationIcon}
+    alt="Notifications"
+    className="w-10 h-10 hover:scale-110 transition"
+  />
+
+</button>
 
           {/* PROFILE */}
 

@@ -2,7 +2,7 @@ import { useState } from 'react'
 
 import logoBuanderie from '../assets/logo-buanderie.png'
 import logoEnsias from '../assets/logo-ensias.png'
-
+import profil from '../assets/profil.png'
 function AdminDashboard() {
   const [alertMessage, setAlertMessage] = useState('')
   const [showProfile, setShowProfile] = useState(false)
@@ -147,9 +147,11 @@ function AdminDashboard() {
               className="flex flex-col items-center"
             >
 
-              <span className="text-[35px]">
-                👤
-              </span>
+              <img
+  src={profil}
+  alt="Admin"
+  className="w-12 h-12 rounded-full object-cover"
+/>
 
               <span
                 className="text-[#555555]"

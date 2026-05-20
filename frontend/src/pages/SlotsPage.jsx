@@ -2,10 +2,15 @@ import { useState } from 'react'
 
 import logoBuanderie from '../assets/logo-buanderie.png'
 import logoEnsias from '../assets/logo-ensias.png'
+import profil from '../assets/profil.png'
+
+import { Link } from 'react-router-dom'
 
 function SlotsPage() {
 
   const [selectedSlot, setSelectedSlot] = useState(null)
+
+  const [showProfileMenu, setShowProfileMenu] = useState(false)
 
   const slots = [
     { hour: '07:00', status: 'free' },
@@ -70,18 +75,60 @@ function SlotsPage() {
             🔔
           </button>
 
-          <div className="flex flex-col items-center">
+          {/* PROFILE */}
 
-            <button className="text-[35px]">
-              👤
+          <div className="relative">
+
+            <button
+              onClick={() =>
+                setShowProfileMenu(!showProfileMenu)
+              }
+              className="flex flex-col items-center"
+            >
+
+              <img
+                src={profil}
+                alt="Profil"
+                className="w-10 h-10 rounded-full"
+              />
+
+              <span
+                className="text-[#555555]"
+                style={{ fontFamily: 'Playpen Sans' }}
+              >
+                Profil
+              </span>
+
             </button>
 
-            <span
-              className="text-[#555555]"
-              style={{ fontFamily: 'Playpen Sans' }}
-            >
-              Profil
-            </span>
+            {showProfileMenu && (
+
+              <div className="absolute right-0 mt-4 w-[250px] bg-white rounded-[20px] shadow-lg p-4 z-50">
+
+                <Link
+                  to="/history"
+                  className="block w-full px-4 py-3 hover:bg-[#F5F5F5] rounded-xl transition"
+                >
+                  Historique
+                </Link>
+
+                <Link
+                  to="/personal-data"
+                  className="block w-full px-4 py-3 hover:bg-[#F5F5F5] rounded-xl transition"
+                >
+                  Données personnelles
+                </Link>
+
+                <Link
+                  to="/student/login"
+                  className="block w-full px-4 py-3 hover:bg-red-100 text-red-500 rounded-xl transition"
+                >
+                  Se déconnecter
+                </Link>
+
+              </div>
+
+            )}
 
           </div>
 
@@ -192,8 +239,8 @@ function SlotsPage() {
 
       <div className="flex justify-center mt-16 relative z-10">
 
-        <button
-          disabled={!selectedSlot}
+        <Link
+          to="/reservation-summary"
           className={`
             px-12
             py-4
@@ -206,13 +253,13 @@ function SlotsPage() {
             ${
               selectedSlot
                 ? 'bg-[#F56B6B] text-white hover:scale-[1.03]'
-                : 'bg-gray-300 text-gray-500 cursor-not-allowed'
+                : 'bg-gray-300 text-gray-500 pointer-events-none'
             }
           `}
           style={{ fontFamily: 'Playpen Sans' }}
         >
           Confirmer la réservation
-        </button>
+        </Link>
 
       </div>
 

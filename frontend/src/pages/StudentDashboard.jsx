@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom'
 
 import logoBuanderie from '../assets/logo-buanderie.png'
 import logoEnsias from '../assets/logo-ensias.png'
-
+import profil from '../assets/profil.png'
 function StudentDashboard() {
   const [studentAlert, setStudentAlert] = useState('')
   const [showProfileMenu, setShowProfileMenu] = useState(false)
@@ -158,9 +158,11 @@ function StudentDashboard() {
               className="flex flex-col items-center"
             >
 
-              <span className="text-[35px]">
-                👤
-              </span>
+              <img
+  src={profil}
+  alt="Profil"
+  className="w-10 h-10 rounded-full"
+/>
 
               <span
                 className="text-[#555555]"
@@ -176,15 +178,21 @@ function StudentDashboard() {
               <div className="absolute right-0 mt-4 w-[250px] bg-white rounded-[20px] shadow-lg p-4 z-50">
 
                 <button className="w-full text-left px-4 py-3 hover:bg-[#F5F5F5] rounded-xl transition">
-                  Historique
+                  <Link to="/history">
+  Historique
+</Link>
                 </button>
 
                 <button className="w-full text-left px-4 py-3 hover:bg-[#F5F5F5] rounded-xl transition">
-                  Données personnelles
+                  <Link to="/personal-data">
+  Données personnelles
+</Link>
                 </button>
 
                 <button className="w-full text-left px-4 py-3 hover:bg-red-100 text-red-500 rounded-xl transition">
-                  Se déconnecter
+                  <Link to="/student/login">
+  Se déconnecter
+</Link>
                 </button>
 
               </div>

@@ -9,8 +9,9 @@ import AdminDashboard from './pages/AdminDashboard'
 import MachinesPage from './pages/MachinesPage'
 import CalendarPage from './pages/CalendarPage'
 import SlotsPage from './pages/SlotsPage'
-
-
+import ReservationSummary from './pages/ReservationSummary'
+import HistoryPage from './pages/HistoryPage'
+import PersonalDataPage from './pages/PersonalDataPage'
 function App() {
 
   return (
@@ -67,6 +68,18 @@ function App() {
  <Route
   path="/slots"
   element={<SlotsPage />}
+/>
+<Route
+  path="/reservation-summary"
+  element={<ReservationSummary />}
+/>
+<Route
+  path="/history"
+  element={<HistoryPage />}
+/>
+<Route
+  path="/personal-data"
+  element={<PersonalDataPage />}
 />
     </Routes>
       

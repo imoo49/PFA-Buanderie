@@ -1,3 +1,4 @@
+import { useState } from 'react'
 import { Link } from 'react-router-dom'
 
 import logoBuanderie from '../assets/logo-buanderie.png'
@@ -5,9 +6,14 @@ import logoEnsias from '../assets/logo-ensias.png'
 
 import washingMachine from '../assets/washing-machine.png'
 import dryerMachine from '../assets/dryer.png'
+import profil from '../assets/profil.png'
 
 function MachinesPage() {
+
+  const [showProfileMenu, setShowProfileMenu] = useState(false)
+
   return (
+
     <div className="min-h-screen bg-[#F5F5F5] relative overflow-hidden">
 
       {/* BACKGROUND */}
@@ -52,24 +58,69 @@ function MachinesPage() {
 
         {/* RIGHT */}
 
-        <div className="flex items-center gap-5">
+        <div className="flex items-center gap-5 relative">
 
           <button className="text-[30px]">
             🔔
           </button>
 
-          <div className="flex flex-col items-center">
+          {/* PROFILE */}
 
-            <button className="text-[35px]">
-              👤
+          <div className="relative">
+
+            <button
+              onClick={() =>
+                setShowProfileMenu(!showProfileMenu)
+              }
+              className="flex flex-col items-center"
+            >
+
+              <img
+                src={profil}
+                alt="Profil"
+                className="w-10 h-10 rounded-full"
+              />
+
+              <span
+                className="text-[#555555]"
+                style={{ fontFamily: 'Playpen Sans' }}
+              >
+                Profil
+              </span>
+
             </button>
 
-            <span
-              className="text-[#555555]"
-              style={{ fontFamily: 'Playpen Sans' }}
-            >
-              Profil
-            </span>
+            {showProfileMenu && (
+
+              <div className="absolute right-0 mt-4 w-[250px] bg-white rounded-[20px] shadow-lg p-4 z-50">
+
+                <button className="w-full text-left px-4 py-3 hover:bg-[#F5F5F5] rounded-xl transition">
+
+                  <Link to="/history">
+                    Historique
+                  </Link>
+
+                </button>
+
+                <button className="w-full text-left px-4 py-3 hover:bg-[#F5F5F5] rounded-xl transition">
+
+                  <Link to="/personal-data">
+                    Données personnelles
+                  </Link>
+
+                </button>
+
+                <button className="w-full text-left px-4 py-3 hover:bg-red-100 text-red-500 rounded-xl transition">
+
+                  <Link to="/student/login">
+                    Se déconnecter
+                  </Link>
+
+                </button>
+
+              </div>
+
+            )}
 
           </div>
 
@@ -100,69 +151,91 @@ function MachinesPage() {
 
         {/* MACHINE A LAVER */}
 
-        <Link to="/calendar">
+        <div
+          onClick={() => {
+            localStorage.setItem(
+              'selectedMachine',
+              'Machine à laver'
+            )
+          }}
+        >
 
-          <div
-            className="w-[350px] h-[420px]
-            bg-gradient-to-b from-[#FFF5F5] to-[#FADDDD]
-            rounded-[40px]
-            shadow-xl
-            flex flex-col items-center justify-center
-            cursor-pointer
-            transition duration-300
-            hover:scale-[1.04]
-            hover:shadow-2xl"
-          >
+          <Link to="/calendar">
 
-            <img
-              src={washingMachine}
-              alt="Machine à laver"
-              className="w-[230px] h-[230px] object-contain"
-            />
-
-            <h2
-              className="mt-10 text-[36px] font-bold text-[#555555] text-center"
-              style={{ fontFamily: 'Playpen Sans' }}
+            <div
+              className="w-[350px] h-[420px]
+              bg-gradient-to-b from-[#FFF5F5] to-[#FADDDD]
+              rounded-[40px]
+              shadow-xl
+              flex flex-col items-center justify-center
+              cursor-pointer
+              transition duration-300
+              hover:scale-[1.04]
+              hover:shadow-2xl"
             >
-              MACHINE À LAVER
-            </h2>
 
-          </div>
+              <img
+                src={washingMachine}
+                alt="Machine à laver"
+                className="w-[230px] h-[230px] object-contain"
+              />
 
-        </Link>
+              <h2
+                className="mt-10 text-[36px] font-bold text-[#555555] text-center"
+                style={{ fontFamily: 'Playpen Sans' }}
+              >
+                MACHINE À LAVER
+              </h2>
+
+            </div>
+
+          </Link>
+
+        </div>
 
         {/* SECHE LINGE */}
 
-        <Link to="/calendar">
+        <div
+          onClick={() => {
+            localStorage.setItem(
+              'selectedMachine',
+              'Sèche linge'
+            )
+          }}
+        >
 
-          <div
-            className="w-[350px] h-[420px]
-            bg-gradient-to-b from-[#FFF5F5] to-[#FADDDD]
-            rounded-[40px]
-            shadow-xl
-            flex flex-col items-center justify-center
-            cursor-pointer
-            transition duration-300
-            hover:scale-[1.04]
-            hover:shadow-2xl"
-          >
+          <Link to="/calendar">
 
-            <img
-              src={dryerMachine}
-              alt="Sèche linge"
-              className="w-[230px] h-[230px] object-contain"
-            />
-
-            <h2
-              className="mt-10 text-[36px] font-bold text-[#555555] text-center"
-              style={{ fontFamily: 'Playpen Sans' }}
+            <div
+              className="w-[350px] h-[420px]
+              bg-gradient-to-b from-[#FFF5F5] to-[#FADDDD]
+              rounded-[40px]
+              shadow-xl
+              flex flex-col items-center justify-center
+              cursor-pointer
+              transition duration-300
+              hover:scale-[1.04]
+              hover:shadow-2xl"
             >
-              SÈCHE LINGE
-            </h2>
 
-          </div>
+              <img
+                src={dryerMachine}
+                alt="Sèche linge"
+                className="w-[230px] h-[230px] object-contain"
+              />
 
-        </Link>
+              <h2
+                className="mt-10 text-[36px] font-bold text-[#555555] text-center"
+                style={{ fontFamily: 'Playpen Sans' }}
+              >
+                SÈCHE LINGE
+              </h2>
+
+            </div>
+
+          </Link>
+
+        </div>
 
       </div>
 

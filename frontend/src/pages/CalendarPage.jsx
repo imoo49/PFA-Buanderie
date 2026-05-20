@@ -1,15 +1,18 @@
 import { useState } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate, Link } from 'react-router-dom'
 
 import Calendar from 'react-calendar'
 import 'react-calendar/dist/Calendar.css'
 
+import profil from '../assets/profil.png'
 import logoBuanderie from '../assets/logo-buanderie.png'
 import logoEnsias from '../assets/logo-ensias.png'
 
 function CalendarPage() {
 
   const [date, setDate] = useState(new Date())
+
+  const [showProfileMenu, setShowProfileMenu] = useState(false)
 
   const navigate = useNavigate()
 
@@ -26,6 +29,8 @@ function CalendarPage() {
       {/* HEADER */}
 
       <header className="flex justify-between items-start px-10 py-6 relative z-10">
+
+        {/* LEFT */}
 
         <div className="flex items-start gap-3">
 
@@ -55,24 +60,71 @@ function CalendarPage() {
 
         </div>
 
+        {/* RIGHT */}
+
         <div className="flex items-center gap-5">
 
           <button className="text-[30px]">
             🔔
           </button>
 
-          <div className="flex flex-col items-center">
+          {/* PROFILE */}
 
-            <button className="text-[35px]">
-              👤
+          <div className="relative">
+
+            <button
+              onClick={() =>
+                setShowProfileMenu(!showProfileMenu)
+              }
+              className="flex flex-col items-center"
+            >
+
+              <img
+                src={profil}
+                alt="Profil"
+                className="w-10 h-10 rounded-full"
+              />
+
+              <span
+                className="text-[#555555]"
+                style={{ fontFamily: 'Playpen Sans' }}
+              >
+                Profil
+              </span>
+
             </button>
 
-            <span
-              className="text-[#555555]"
-              style={{ fontFamily: 'Playpen Sans' }}
-            >
-              Profil
-            </span>
+            {showProfileMenu && (
+
+              <div className="absolute right-0 mt-4 w-[250px] bg-white rounded-[20px] shadow-lg p-4 z-50">
+
+                <button className="w-full text-left px-4 py-3 hover:bg-[#F5F5F5] rounded-xl transition">
+
+                  <Link to="/history">
+                    Historique
+                  </Link>
+
+                </button>
+
+                <button className="w-full text-left px-4 py-3 hover:bg-[#F5F5F5] rounded-xl transition">
+
+                  <Link to="/personal-data">
+                    Données personnelles
+                  </Link>
+
+                </button>
+
+                <button className="w-full text-left px-4 py-3 hover:bg-red-100 text-red-500 rounded-xl transition">
+
+                  <Link to="/student/login">
+                    Se déconnecter
+                  </Link>
+
+                </button>
+
+              </div>
+
+            )}
 
           </div>
 
@@ -111,7 +163,16 @@ function CalendarPage() {
         </div>
 
         <button
-          onClick={() => navigate('/slots')}
+          onClick={() => {
+
+            localStorage.setItem(
+              'selectedDate',
+              date.toDateString()
+            )
+
+            navigate('/slots')
+
+          }}
           className="mt-10 bg-[#F56B6B] text-white px-10 py-4 rounded-[15px] font-bold hover:scale-[1.03] transition"
           style={{ fontFamily: 'Playpen Sans' }}
         >

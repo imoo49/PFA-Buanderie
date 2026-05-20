@@ -10,16 +10,31 @@ function AdminLogin() {
   const [password, setPassword] = useState('')
 
   const handleSubmit = (e) => {
-    e.preventDefault()
+  e.preventDefault()
 
-    if (!email || !password) {
-      alert("Veuillez remplir tous les champs")
-      return
-    }
+  if (!email || !password) {
+    alert("Veuillez remplir tous les champs")
+    return
+  }
 
+  // COMPTE ADMIN TEMPORAIRE
+
+  const adminEmail = "admin@ensias.ma"
+  const adminPassword = "admin123"
+
+  if (
+    email === adminEmail &&
+    password === adminPassword
+  ) {
     alert("Connexion admin réussie")
+
     navigate('/admin/dashboard')
   }
+
+  else {
+    alert("Email ou mot de passe incorrect")
+  }
+}
 
   return (
     <div className="min-h-screen bg-[#F5F5F5] relative overflow-hidden">

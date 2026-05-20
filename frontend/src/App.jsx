@@ -10,6 +10,7 @@ import MachinesPage from './pages/MachinesPage'
 import CalendarPage from './pages/CalendarPage'
 import SlotsPage from './pages/SlotsPage'
 
+
 function App() {
 
   return (
@@ -53,7 +54,8 @@ function App() {
         path="/admin/login"
         element={<AdminLogin />}
       />
-
+     
+    
       <Route
         path="/admin/dashboard"
         element={<AdminDashboard />}

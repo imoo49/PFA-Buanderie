@@ -1,33 +1,103 @@
+import { useState } from 'react'
+
 import logoBuanderie from '../assets/logo-buanderie.png'
 import logoEnsias from '../assets/logo-ensias.png'
 
 function AdminDashboard() {
+
+  const [showProfile, setShowProfile] = useState(false)
+
+  const [machines, setMachines] = useState([
+    {
+      id: 1,
+      name: 'LV-01',
+      status: 'Libre',
+    },
+    {
+      id: 2,
+      name: 'SL-02',
+      status: 'Occupée',
+    },
+    {
+      id: 3,
+      name: 'LV-03',
+      status: 'Hors service',
+    },
+  ])
+
+  const [reservations] = useState([
+    {
+      id: 1,
+      student: 'Malak Zikri',
+      machine: 'LV-01',
+      time: '14:00',
+      duration: '1h30',
+      status: 'Confirmée',
+    },
+    {
+      id: 2,
+      student: 'Sara Amrani',
+      machine: 'SL-02',
+      time: '16:30',
+      duration: '1h',
+      status: 'En attente',
+    },
+    {
+      id: 3,
+      student: 'Yassine Alaoui',
+      machine: 'LV-03',
+      time: '18:00',
+      duration: '2h',
+      status: 'Terminée',
+    },
+  ])
+
+  const addMachine = () => {
+
+    const newMachine = {
+      id: machines.length + 1,
+      name: `LV-0${machines.length + 1}`,
+      status: 'Libre',
+    }
+
+    setMachines([...machines, newMachine])
+  }
+
+  const deleteMachine = (id) => {
+    setMachines(
+      machines.filter((machine) => machine.id !== id)
+    )
+  }
+
   return (
-    <div className="min-h-screen bg-[#F5F5F5] px-10 py-6">
+
+    <div className="min-h-screen bg-[#F5F5F5] p-6">
 
       {/* HEADER */}
-      <div className="flex justify-between items-start">
+
+      <header className="flex justify-between items-start">
 
         {/* LEFT */}
-        <div className="flex items-start gap-3 -mt-4">
+
+        <div className="flex items-start gap-3">
 
           <img
             src={logoBuanderie}
             alt="Buanderie"
-            className="w-28 -mt-3"
+            className="w-24"
           />
 
           <div>
 
             <h1
-              className="text-[42px] leading-none font-bold text-[#555555]"
+              className="text-[38px] leading-none font-bold text-[#555555]"
               style={{ fontFamily: 'Playpen Sans' }}
             >
               Buanderie
             </h1>
 
             <h2
-              className="text-[42px] leading-none font-bold text-[#555555] mt-2"
+              className="text-[38px] leading-none font-bold text-[#555555] mt-2"
               style={{ fontFamily: 'Playpen Sans' }}
             >
               ENSIAS
@@ -37,180 +107,282 @@ function AdminDashboard() {
 
         </div>
 
-        {/* RIGHT */}
-        <img
-          src={logoEnsias}
-          alt="ENSIAS"
-          className="w-28"
-        />
-
-      </div>
-
-      {/* TITLE */}
-      <div className="mt-10">
+        {/* CENTER */}
 
         <h1
+          className="text-[45px] text-[#555555] font-bold mt-2"
+          style={{ fontFamily: 'Playpen Sans' }}
+        >
+          Dashboard Admin
+        </h1>
+
+        {/* RIGHT */}
+
+        <div className="flex items-center gap-6 relative">
+
+          <img
+            src={logoEnsias}
+            alt="ENSIAS"
+            className="w-24"
+          />
+
+          <div className="relative">
+
+            <button
+              onClick={() =>
+                setShowProfile(!showProfile)
+              }
+              className="flex flex-col items-center"
+            >
+
+              <span className="text-[35px]">
+                👤
+              </span>
+
+              <span
+                className="text-[#555555]"
+                style={{ fontFamily: 'Playpen Sans' }}
+              >
+                Admin
+              </span>
+
+            </button>
+
+            {showProfile && (
+
+              <div className="absolute right-0 mt-4 w-[220px] bg-white rounded-[20px] shadow-lg p-4 z-50">
+
+                <button className="w-full text-left px-4 py-3 hover:bg-[#F5F5F5] rounded-xl transition">
+                  Paramètres
+                </button>
+
+                <button className="w-full text-left px-4 py-3 hover:bg-red-100 text-red-500 rounded-xl transition">
+                  Déconnexion
+                </button>
+
+              </div>
+
+            )}
+
+          </div>
+
+        </div>
+
+      </header>
+
+      {/* WELCOME */}
+
+      <div className="mt-12">
+
+        <h2
           className="text-[38px] font-bold text-[#555555]"
           style={{ fontFamily: 'Playpen Sans' }}
         >
-          Tableau de bord Admin
-        </h1>
+          Bonjour Admin 👋
+        </h2>
 
-        <p
-          className="text-[#777777] mt-2 text-lg"
-          style={{ fontFamily: 'Playpen Sans' }}
-        >
-          Gérez les réservations et les étudiants.
+        <p className="text-gray-500 mt-1">
+          Gérez les machines et les réservations
         </p>
 
       </div>
 
       {/* STATS */}
-      <div className="grid grid-cols-4 gap-8 mt-12">
 
-        {/* CARD 1 */}
-        <div className="bg-white rounded-[30px] p-8 shadow-sm">
+      <div className="grid grid-cols-4 gap-8 mt-10">
 
-          <h2
-            className="text-[#555555] text-2xl font-bold"
-            style={{ fontFamily: 'Playpen Sans' }}
-          >
-            Réservations
-          </h2>
+        <div className="bg-[#F56B6B] text-white rounded-[25px] p-6 shadow-md">
 
-          <p
-            className="text-5xl mt-6 font-bold text-[#555555]"
-            style={{ fontFamily: 'Playpen Sans' }}
-          >
+          <h1 className="text-[40px] font-bold">
             24
+          </h1>
+
+          <p>
+            Réservations
           </p>
 
         </div>
 
-        {/* CARD 2 */}
-        <div className="bg-white rounded-[30px] p-8 shadow-sm">
+        <div className="bg-white rounded-[25px] p-6 shadow-md">
 
-          <h2
-            className="text-[#555555] text-2xl font-bold"
-            style={{ fontFamily: 'Playpen Sans' }}
-          >
-            Étudiants
-          </h2>
-
-          <p
-            className="text-5xl mt-6 font-bold text-[#555555]"
-            style={{ fontFamily: 'Playpen Sans' }}
-          >
+          <h1 className="text-[40px] font-bold text-[#555555]">
             56
+          </h1>
+
+          <p className="text-[#555555]">
+            Étudiants
           </p>
 
         </div>
 
-        {/* CARD 3 */}
-        <div className="bg-white rounded-[30px] p-8 shadow-sm">
+        <div className="bg-white rounded-[25px] p-6 shadow-md">
 
-          <h2
-            className="text-[#555555] text-2xl font-bold"
-            style={{ fontFamily: 'Playpen Sans' }}
-          >
+          <h1 className="text-[40px] font-bold text-[#555555]">
+            {machines.length}
+          </h1>
+
+          <p className="text-[#555555]">
             Machines
-          </h2>
-
-          <p
-            className="text-5xl mt-6 font-bold text-[#555555]"
-            style={{ fontFamily: 'Playpen Sans' }}
-          >
-            8
           </p>
 
         </div>
 
-        {/* CARD 4 */}
-        <div className="bg-white rounded-[30px] p-8 shadow-sm">
+        <div className="bg-white rounded-[25px] p-6 shadow-md">
 
-          <h2
-            className="text-[#555555] text-2xl font-bold"
-            style={{ fontFamily: 'Playpen Sans' }}
-          >
-            Aujourd’hui
-          </h2>
-
-          <p
-            className="text-5xl mt-6 font-bold text-[#555555]"
-            style={{ fontFamily: 'Playpen Sans' }}
-          >
+          <h1 className="text-[40px] font-bold text-[#555555]">
             12
+          </h1>
+
+          <p className="text-[#555555]">
+            Aujourd’hui
           </p>
 
         </div>
 
       </div>
 
-      {/* RESERVATIONS TABLE */}
-      <div className="bg-white rounded-[35px] mt-14 p-8 shadow-sm">
+      {/* CONTENT */}
 
-        <h2
-          className="text-3xl font-bold text-[#555555]"
-          style={{ fontFamily: 'Playpen Sans' }}
-        >
-          Réservations récentes
-        </h2>
+      <div className="grid grid-cols-2 gap-10 mt-14">
 
-        <div className="mt-8 space-y-5">
+        {/* MACHINES */}
 
-          {/* ROW */}
-          <div className="flex justify-between items-center bg-[#F5F5F5] rounded-[20px] px-6 py-4">
+        <div className="bg-white rounded-[30px] p-8 shadow-sm">
 
-            <div>
-              <h3
-                className="text-xl font-bold text-[#555555]"
-                style={{ fontFamily: 'Playpen Sans' }}
-              >
-                Malak Zikri
-              </h3>
+          <div className="flex justify-between items-center mb-8">
 
-              <p
-                className="text-[#777777]"
-                style={{ fontFamily: 'Playpen Sans' }}
-              >
-                Machine 2 • 14:00
-              </p>
-            </div>
-
-            <button
-              className="bg-[#555555] text-white px-6 py-2 rounded-[15px]"
+            <h2
+              className="text-[30px] font-bold text-[#555555]"
               style={{ fontFamily: 'Playpen Sans' }}
             >
-              Voir
+              Gestion des machines
+            </h2>
+
+            <button
+              onClick={addMachine}
+              className="bg-[#F56B6B] text-white px-5 py-3 rounded-[15px] font-bold hover:scale-[1.03] transition"
+            >
+              + Ajouter
             </button>
 
           </div>
 
-          {/* ROW */}
-          <div className="flex justify-between items-center bg-[#F5F5F5] rounded-[20px] px-6 py-4">
+          <div className="space-y-5">
 
-            <div>
-              <h3
-                className="text-xl font-bold text-[#555555]"
-                style={{ fontFamily: 'Playpen Sans' }}
+            {machines.map((machine) => (
+
+              <div
+                key={machine.id}
+                className="flex justify-between items-center bg-[#F9F9F9] p-5 rounded-[20px]"
               >
-                Sara Amrani
-              </h3>
 
-              <p
-                className="text-[#777777]"
-                style={{ fontFamily: 'Playpen Sans' }}
-              >
-                Machine 5 • 16:00
-              </p>
-            </div>
+                <div>
 
-            <button
-              className="bg-[#555555] text-white px-6 py-2 rounded-[15px]"
+                  <h3 className="font-bold text-[#555555] text-lg">
+                    {machine.name}
+                  </h3>
+
+                  <span
+                    className={`px-4 py-1 rounded-full text-sm font-bold
+                    ${
+                      machine.status === 'Libre'
+                        ? 'bg-green-100 text-green-600'
+                        : machine.status === 'Occupée'
+                        ? 'bg-yellow-100 text-yellow-600'
+                        : 'bg-red-100 text-red-500'
+                    }`}
+                  >
+                    {machine.status}
+                  </span>
+
+                </div>
+
+                <button
+                  onClick={() =>
+                    deleteMachine(machine.id)
+                  }
+                  className="bg-red-100 text-red-500 px-4 py-2 rounded-[12px] hover:bg-red-200 transition"
+                >
+                  Supprimer
+                </button>
+
+              </div>
+
+            ))}
+
+          </div>
+
+        </div>
+
+        {/* RESERVATIONS */}
+
+        <div className="bg-white rounded-[30px] p-8 shadow-sm">
+
+          <div className="flex justify-between items-center mb-8">
+
+            <h2
+              className="text-[30px] font-bold text-[#555555]"
               style={{ fontFamily: 'Playpen Sans' }}
             >
-              Voir
+              Réservations récentes
+            </h2>
+
+            <button className="text-[#F56B6B] font-semibold">
+              Voir tout →
             </button>
+
+          </div>
+
+          <div className="space-y-5">
+
+            {reservations.map((reservation) => (
+
+              <div
+                key={reservation.id}
+                className="bg-[#F9F9F9] p-5 rounded-[20px] hover:shadow-md transition cursor-pointer"
+                onClick={() =>
+                  alert(
+                    `Étudiant : ${reservation.student}
+Machine : ${reservation.machine}
+Horaire : ${reservation.time}
+Durée : ${reservation.duration}
+Statut : ${reservation.status}`
+                  )
+                }
+              >
+
+                <div className="flex justify-between items-center">
+
+                  <div>
+
+                    <h3 className="font-bold text-[#555555] text-lg">
+                      {reservation.student}
+                    </h3>
+
+                    <p className="text-gray-500">
+                      {reservation.machine} • {reservation.time}
+                    </p>
+
+                  </div>
+
+                  <span
+                    className={`px-4 py-2 rounded-full text-sm font-bold
+                    ${
+                      reservation.status === 'Confirmée'
+                        ? 'bg-green-100 text-green-600'
+                        : reservation.status === 'En attente'
+                        ? 'bg-yellow-100 text-yellow-600'
+                        : 'bg-red-100 text-red-500'
+                    }`}
+                  >
+                    {reservation.status}
+                  </span>
+
+                </div>
+
+              </div>
+
+            ))}
 
           </div>
 

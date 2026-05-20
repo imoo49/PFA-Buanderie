@@ -1,11 +1,11 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 
 import logoBuanderie from '../assets/logo-buanderie.png'
 import logoEnsias from '../assets/logo-ensias.png'
 
 function StudentDashboard() {
-
+  const [studentAlert, setStudentAlert] = useState('')
   const [showProfileMenu, setShowProfileMenu] = useState(false)
   const [showNotifications, setShowNotifications] = useState(false)
 
@@ -198,7 +198,24 @@ function StudentDashboard() {
       </header>
 
       {/* WELCOME */}
+      {studentAlert && (
 
+  <div className="bg-[#FFF3CD] border border-[#FFE69C] text-[#856404] p-5 rounded-[20px] mt-8 shadow-sm">
+
+    <h3
+      className="font-bold text-[24px] mb-2"
+      style={{ fontFamily: 'Playpen Sans' }}
+    >
+      Alerte Admin ⚠️
+    </h3>
+
+    <p className="text-[18px]">
+      {studentAlert}
+    </p>
+
+  </div>
+
+)}
       <div className="mt-12">
 
         <h2
@@ -215,9 +232,9 @@ function StudentDashboard() {
       </div>
 
       {/* STATS */}
-
+      
       <div className="flex gap-8 mt-10">
-
+      
         {/* ACTIVE */}
 
         <div className="bg-[#F05645] text-white rounded-[25px] p-6 w-[260px] shadow-md">

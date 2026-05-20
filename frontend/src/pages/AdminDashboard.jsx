@@ -4,9 +4,21 @@ import logoBuanderie from '../assets/logo-buanderie.png'
 import logoEnsias from '../assets/logo-ensias.png'
 
 function AdminDashboard() {
-
+  const [alertMessage, setAlertMessage] = useState('')
   const [showProfile, setShowProfile] = useState(false)
+  const handleSendAlert = () => {
 
+  if (!alertMessage) {
+    alert('Veuillez écrire une alerte')
+    return
+  }
+
+  localStorage.setItem('studentAlert', alertMessage)
+
+  alert('Alerte envoyée aux étudiants')
+
+  setAlertMessage('')
+}
   const [machines, setMachines] = useState([
     {
       id: 1,
@@ -313,6 +325,37 @@ function AdminDashboard() {
           </div>
 
         </div>
+        {/* ALERT SECTION */}
+
+<div className="bg-white p-8 rounded-[30px] shadow-md mt-10">
+
+  <div className="flex justify-between items-center mb-6">
+
+    <h2
+      className="text-[30px] font-bold text-[#555555]"
+      style={{ fontFamily: 'Playpen Sans' }}
+    >
+      Envoyer une alerte
+    </h2>
+
+  </div>
+
+  <textarea
+    placeholder="Ex: La buanderie sera fermée demain de 14h à 18h."
+    value={alertMessage}
+    onChange={(e) => setAlertMessage(e.target.value)}
+    className="w-full h-[120px] rounded-[20px] border border-[#E5E5E5] p-5 outline-none resize-none"
+  />
+
+  <button
+    onClick={handleSendAlert}
+    className="mt-5 bg-[#F56B6B] text-white px-8 py-4 rounded-[15px] font-bold hover:scale-[1.02] transition"
+    style={{ fontFamily: 'Playpen Sans' }}
+  >
+    Envoyer l’alerte
+  </button>
+
+</div>
 
         {/* RESERVATIONS */}
 

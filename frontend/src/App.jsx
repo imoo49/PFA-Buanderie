@@ -12,6 +12,8 @@ import SlotsPage from './pages/SlotsPage'
 import ReservationSummary from './pages/ReservationSummary'
 import HistoryPage from './pages/HistoryPage'
 import PersonalDataPage from './pages/PersonalDataPage'
+import GirlsDay from './pages/GirlsDay'
+import BoysDay from './pages/BoysDay'
 function App() {
 
   return (
@@ -81,6 +83,8 @@ function App() {
   path="/personal-data"
   element={<PersonalDataPage />}
 />
+<Route path="/girls-day" element={<GirlsDay />} />
+<Route path="/boys-day" element={<BoysDay />} />
     </Routes>
       
   )

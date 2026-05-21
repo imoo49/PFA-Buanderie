@@ -8,13 +8,20 @@ import profil from '../assets/profil.png'
 import logoBuanderie from '../assets/logo-buanderie.png'
 import logoEnsias from '../assets/logo-ensias.png'
 import notificationIcon from '../assets/notification-icon.png'
+
 function CalendarPage() {
 
   const [date, setDate] = useState(new Date())
 
   const [showProfileMenu, setShowProfileMenu] = useState(false)
 
+  const [showNotifications, setShowNotifications] = useState(false)
+
   const navigate = useNavigate()
+
+  const studentData = JSON.parse(
+    localStorage.getItem('studentData')
+  )
 
   return (
 
@@ -64,19 +71,48 @@ function CalendarPage() {
 
         <div className="flex items-center gap-5">
 
-          <button
-  onClick={() =>
-    setShowNotifications(!showNotifications)
-  }
->
+          {/* NOTIFICATIONS */}
 
-  <img
-    src={notificationIcon}
-    alt="Notifications"
-    className="w-10 h-10 hover:scale-110 transition"
-  />
+          <div className="relative">
 
-</button>
+            <button
+              onClick={() =>
+                setShowNotifications(!showNotifications)
+              }
+            >
+
+              <img
+                src={notificationIcon}
+                alt="Notifications"
+                className="w-10 h-10 hover:scale-110 transition"
+              />
+
+            </button>
+
+            {showNotifications && (
+
+              <div className="absolute right-0 mt-4 w-[320px] bg-white rounded-[20px] shadow-lg p-5 z-50">
+
+                <h2 className="text-[22px] font-bold text-[#555555] mb-4">
+                  Notifications
+                </h2>
+
+                <div className="bg-[#F9F9F9] p-4 rounded-[15px]">
+
+                  <p className="text-[#555555]">
+                    {
+                      localStorage.getItem('studentAlert')
+                        || 'Aucune notification disponible'
+                    }
+                  </p>
+
+                </div>
+
+              </div>
+
+            )}
+
+          </div>
 
           {/* PROFILE */}
 
@@ -174,6 +210,28 @@ function CalendarPage() {
 
         <button
           onClick={() => {
+
+            const day = date.getDay()
+
+            if (
+              studentData?.gender === 'Femme'
+              && day === 2
+            ) {
+              alert(
+                'Ce jour est réservé aux garçons'
+              )
+              return
+            }
+
+            if (
+              studentData?.gender === 'Homme'
+              && day === 1
+            ) {
+              alert(
+                'Ce jour est réservé aux filles'
+              )
+              return
+            }
 
             localStorage.setItem(
               'selectedDate',

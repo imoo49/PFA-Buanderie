@@ -9,19 +9,31 @@ import logoEnsias from '../assets/logo-ensias.png'
 function StudentRegister() {
 
   const [email, setEmail] = useState('')
+  const [gender, setGender] = useState('')
   const [error, setError] = useState('')
 
-  const handleSubmit = (e) => {
-    e.preventDefault()
+const handleSubmit = (e) => {
+  e.preventDefault()
 
-    if (!allowedEmails.includes(email.toLowerCase())) {
-      setError("Email institutionnel non autorisé")
-      return
-    }
-
-    setError('')
-    alert("Compte créé avec succès")
+  if (!allowedEmails.includes(email.toLowerCase())) {
+    setError("Email institutionnel non autorisé")
+    return
   }
+
+  const studentData = {
+    email,
+    gender,
+  }
+
+  localStorage.setItem(
+    'studentData',
+    JSON.stringify(studentData)
+  )
+
+  setError('')
+
+  alert("Compte créé avec succès")
+}
 
   return (
     <div className="min-h-screen bg-[#F5F5F5] relative overflow-hidden">
@@ -175,43 +187,75 @@ function StudentRegister() {
 
           </div>
 
-          {/* ROOM + GENDER */}
+{/* ROOM + GENDER */}
 
-          <div className="flex gap-5 mb-10">
+<div className="flex gap-5 mb-10">
 
-            <div className="flex-1">
+  {/* ROOM */}
 
-              <label
-                className="block text-[28px] text-[#555555] mb-3"
-                style={{ fontFamily: 'Playpen Sans' }}
-              >
-                Numero de chambre
-              </label>
+  <div className="flex-1">
 
-              <input
-                type="text"
-                className="w-full h-[55px] rounded-[12px] px-4 bg-white border border-[#D9D9D9] outline-none shadow-sm"
-              />
+    <label
+      className="block text-[28px] text-[#555555] mb-3"
+      style={{ fontFamily: 'Playpen Sans' }}
+    >
+      Numero de chambre
+    </label>
 
-            </div>
+    <input
+      type="text"
+      placeholder="Ex : B-203"
+      className="w-full h-[55px] rounded-[12px] px-4 bg-white border border-[#D9D9D9] outline-none shadow-sm"
+    />
 
-            <div className="flex-1">
+  </div>
 
-              <label
-                className="block text-[28px] text-[#555555] mb-3"
-                style={{ fontFamily: 'Playpen Sans' }}
-              >
-                Genre
-              </label>
+  {/* GENDER */}
 
-              <input
-                type="text"
-                className="w-full h-[55px] rounded-[12px] px-4 bg-white border border-[#D9D9D9] outline-none shadow-sm"
-              />
+  <div className="flex-1">
 
-            </div>
+    <label
+      className="block text-[28px] text-[#555555] mb-5"
+      style={{ fontFamily: 'Playpen Sans' }}
+    >
+      Genre
+    </label>
 
-          </div>
+    <div className="flex gap-8 mt-4">
+
+      <label className="flex items-center gap-3 text-[#555555] text-lg">
+
+        <input
+          type="radio"
+          name="gender"
+          value="Homme"
+          onChange={(e) => setGender(e.target.value)}
+          className="w-5 h-5 accent-[#F56B6B]"
+        />
+
+        Homme
+
+      </label>
+
+      <label className="flex items-center gap-3 text-[#555555] text-lg">
+
+        <input
+          type="radio"
+          name="gender"
+          value="Femme"
+          onChange={(e) => setGender(e.target.value)}
+          className="w-5 h-5 accent-[#F56B6B]"
+        />
+
+        Femme
+
+      </label>
+
+    </div>
+
+  </div>
+
+</div>
 
           {/* BUTTON */}
 

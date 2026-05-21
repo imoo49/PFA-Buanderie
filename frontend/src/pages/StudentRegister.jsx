@@ -125,7 +125,7 @@ const handleSubmit = (e) => {
           <div className="mb-6">
 
             <label
-              className="block text-[28px] text-[#555555] mb-3"
+              className="block text-[24px] text-[#555555] mb-3"
               style={{ fontFamily: 'Playpen Sans' }}
             >
               Nom & Prenom
@@ -146,7 +146,7 @@ const handleSubmit = (e) => {
             <div className="flex-1">
 
               <label
-                className="block text-[28px] text-[#555555] mb-3"
+                className="block text-[24px] text-[#555555] mb-3"
                 style={{ fontFamily: 'Playpen Sans' }}
               >
                 Email
@@ -171,10 +171,10 @@ const handleSubmit = (e) => {
             <div className="flex-1">
 
               <label
-                className="block text-[28px] text-[#555555] mb-3"
+                className="block text-[24px] text-[#555555] mb-3"
                 style={{ fontFamily: 'Playpen Sans' }}
               >
-                Numero de telephone
+                Numéro de telephone
               </label>
 
               <input
@@ -196,10 +196,10 @@ const handleSubmit = (e) => {
   <div className="flex-1">
 
     <label
-      className="block text-[28px] text-[#555555] mb-3"
+      className="block text-[24px] text-[#555555] mb-3"
       style={{ fontFamily: 'Playpen Sans' }}
     >
-      Numero de chambre
+      Numéro de chambre
     </label>
 
     <input
@@ -215,13 +215,13 @@ const handleSubmit = (e) => {
   <div className="flex-1">
 
     <label
-      className="block text-[28px] text-[#555555] mb-5"
+      className="block text-[24px] text-[#555555] mb-3"
       style={{ fontFamily: 'Playpen Sans' }}
     >
       Genre
     </label>
 
-    <div className="flex gap-8 mt-4">
+    <div className="flex gap-8 h-[55px] items-center">
 
       <label className="flex items-center gap-3 text-[#555555] text-lg">
 
@@ -290,8 +290,7 @@ const handleSubmit = (e) => {
               className="text-[#555555] text-[22px]"
               style={{ fontFamily: 'Playpen Sans' }}
             >
-              +212 708293615 <br>
-              </br>
+              +212 708293615 <br />
               +212 760111165
             </p>
 

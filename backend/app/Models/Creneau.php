@@ -9,12 +9,20 @@ class Creneau extends Model
      use HasFactory;
 
     protected $fillable = [
-        'heure_debut',
-        'heure_fin',
-    ];
+    'date',
+    'heureDebut',
+    'heureFin',
+    'statut',
+    'machine_id',
+];
 
-    public function reservations()
-    {
-        return $this->hasMany(Reservation::class);
-    }
+public function machine()
+{
+    return $this->belongsTo(Machine::class);
+}
+
+public function reservations()
+{
+    return $this->hasMany(Reservation::class);
+}
 }

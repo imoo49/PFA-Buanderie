@@ -10,10 +10,10 @@ class Machine extends Model
     use HasFactory;
 
     protected $fillable = [
-        'nom',
-        'type',
-        'etat',
-    ];
+    'type',
+    'numero',
+    'capacite',
+];
 
     public function reservations()
     {

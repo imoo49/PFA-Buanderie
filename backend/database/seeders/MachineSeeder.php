@@ -9,12 +9,12 @@ class MachineSeeder extends Seeder
 {
     public function run(): void
     {
-        // 7 machines de lavage
+        // 7 lave-linges
         for ($i = 1; $i <= 7; $i++) {
             DB::table('machines')->insert([
-                'nom' => 'Machine Lavage ' . $i,
-                'type' => 'lavage',
-                'etat' => 'disponible',
+                'type' => 'lave-linge',
+                'numero' => 'LL-' . str_pad($i, 2, '0', STR_PAD_LEFT), // LL-01, LL-02, etc.
+                'capacite' => rand(7, 10), // Capacité aléatoire entre 7 et 10 kg
                 'created_at' => now(),
                 'updated_at' => now(),
             ]);
@@ -23,9 +23,9 @@ class MachineSeeder extends Seeder
         // 2 sèche-linges
         for ($i = 1; $i <= 2; $i++) {
             DB::table('machines')->insert([
-                'nom' => 'Sèche-linge ' . $i,
-                'type' => 'sechage',
-                'etat' => 'disponible',
+                'type' => 'seche-linge',
+                'numero' => 'SL-' . str_pad($i, 2, '0', STR_PAD_LEFT), // SL-01, SL-02
+                'capacite' => rand(6, 8),
                 'created_at' => now(),
                 'updated_at' => now(),
             ]);

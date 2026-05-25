@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { Link } from 'react-router-dom'
-
+import { useEffect, useState } from 'react'
+import api from '../api/api'
 import logoBuanderie from '../assets/logo-buanderie.png'
 import logoEnsias from '../assets/logo-ensias.png'
 
@@ -9,8 +10,9 @@ import dryerMachine from '../assets/dryer.png'
 import profil from '../assets/profil.png'
 import notificationIcon from '../assets/notification-icon.png'
 function MachinesPage() {
-
+  const [machines, setMachines] = useState([])
   const [showProfileMenu, setShowProfileMenu] = useState(false)
+  const [showNotifications, setShowNotifications] = useState(false)
 
   return (
 
@@ -155,99 +157,53 @@ function MachinesPage() {
 
       </div>
 
-      {/* MACHINES */}
-
       <div className="flex justify-center gap-28 mt-24 relative z-10">
 
-        {/* MACHINE A LAVER */}
+  {/* MACHINE A LAVER */}
+  <Link to="/calendar">
+    <div
+      onClick={() => localStorage.setItem('selectedMachine', 'lave-linge')}
+      className="w-[350px] h-[420px]
+      bg-gradient-to-b from-[#FFF5F5] to-[#FADDDD]
+      rounded-[40px]
+      shadow-xl
+      flex flex-col items-center justify-center
+      cursor-pointer
+      transition duration-300
+      hover:scale-[1.04]
+      hover:shadow-2xl"
+    >
+      <img src={washingMachine} className="w-[230px] h-[230px]" />
 
-        <div
-          onClick={() => {
-            localStorage.setItem(
-              'selectedMachine',
-              'Machine à laver'
-            )
-          }}
-        >
+      <h2 className="mt-10 text-[36px] font-bold text-[#555555]">
+        MACHINE À LAVER ({laveLinge.length})
+      </h2>
+    </div>
+  </Link>
 
-          <Link to="/calendar">
+  {/* SECHE LINGE */}
+  <Link to="/calendar">
+    <div
+      onClick={() => localStorage.setItem('selectedMachine', 'seche-linge')}
+      className="w-[350px] h-[420px]
+      bg-gradient-to-b from-[#FFF5F5] to-[#FADDDD]
+      rounded-[40px]
+      shadow-xl
+      flex flex-col items-center justify-center
+      cursor-pointer
+      transition duration-300
+      hover:scale-[1.04]
+      hover:shadow-2xl"
+    >
+      <img src={dryerMachine} className="w-[230px] h-[230px]" />
 
-            <div
-              className="w-[350px] h-[420px]
-              bg-gradient-to-b from-[#FFF5F5] to-[#FADDDD]
-              rounded-[40px]
-              shadow-xl
-              flex flex-col items-center justify-center
-              cursor-pointer
-              transition duration-300
-              hover:scale-[1.04]
-              hover:shadow-2xl"
-            >
+      <h2 className="mt-10 text-[36px] font-bold text-[#555555]">
+        SÈCHE LINGE ({secheLinge.length})
+      </h2>
+    </div>
+  </Link>
 
-              <img
-                src={washingMachine}
-                alt="Machine à laver"
-                className="w-[230px] h-[230px] object-contain"
-              />
-
-              <h2
-                className="mt-10 text-[36px] font-bold text-[#555555] text-center"
-                style={{ fontFamily: 'Playpen Sans' }}
-              >
-                MACHINE À LAVER
-              </h2>
-
-            </div>
-
-          </Link>
-
-        </div>
-
-        {/* SECHE LINGE */}
-
-        <div
-          onClick={() => {
-            localStorage.setItem(
-              'selectedMachine',
-              'Sèche linge'
-            )
-          }}
-        >
-
-          <Link to="/calendar">
-
-            <div
-              className="w-[350px] h-[420px]
-              bg-gradient-to-b from-[#FFF5F5] to-[#FADDDD]
-              rounded-[40px]
-              shadow-xl
-              flex flex-col items-center justify-center
-              cursor-pointer
-              transition duration-300
-              hover:scale-[1.04]
-              hover:shadow-2xl"
-            >
-
-              <img
-                src={dryerMachine}
-                alt="Sèche linge"
-                className="w-[230px] h-[230px] object-contain"
-              />
-
-              <h2
-                className="mt-10 text-[36px] font-bold text-[#555555] text-center"
-                style={{ fontFamily: 'Playpen Sans' }}
-              >
-                SÈCHE LINGE
-              </h2>
-
-            </div>
-
-          </Link>
-
-        </div>
-
-      </div>
+</div>
 
     </div>
   )

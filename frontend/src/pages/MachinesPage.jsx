@@ -1,7 +1,7 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { Link } from 'react-router-dom'
-import { useEffect, useState } from 'react'
 import api from '../api/api'
+
 import logoBuanderie from '../assets/logo-buanderie.png'
 import logoEnsias from '../assets/logo-ensias.png'
 
@@ -9,10 +9,48 @@ import washingMachine from '../assets/washing-machine.png'
 import dryerMachine from '../assets/dryer.png'
 import profil from '../assets/profil.png'
 import notificationIcon from '../assets/notification-icon.png'
+
 function MachinesPage() {
+
   const [machines, setMachines] = useState([])
   const [showProfileMenu, setShowProfileMenu] = useState(false)
   const [showNotifications, setShowNotifications] = useState(false)
+
+  useEffect(() => {
+
+    const fetchMachines = async () => {
+
+      try {
+
+        const token = localStorage.getItem('token')
+
+        const response = await api.get('/machines', {
+          headers: {
+            Authorization: `Bearer ${token}`
+          }
+        })
+
+        setMachines(response.data)
+
+      } catch (error) {
+
+        console.error('Erreur récupération machines :', error)
+
+      }
+
+    }
+
+    fetchMachines()
+
+  }, [])
+
+  const laveLinge = machines.filter(
+    machine => machine.type === 'lave-linge'
+  )
+
+  const secheLinge = machines.filter(
+    machine => machine.type === 'seche-linge'
+  )
 
   return (
 
@@ -63,18 +101,18 @@ function MachinesPage() {
         <div className="flex items-center gap-5 relative">
 
           <button
-  onClick={() =>
-    setShowNotifications(!showNotifications)
-  }
->
+            onClick={() =>
+              setShowNotifications(!showNotifications)
+            }
+          >
 
-  <img
-    src={notificationIcon}
-    alt="Notifications"
-    className="w-10 h-10 hover:scale-110 transition"
-  />
+            <img
+              src={notificationIcon}
+              alt="Notifications"
+              className="w-10 h-10 hover:scale-110 transition"
+            />
 
-</button>
+          </button>
 
           {/* PROFILE */}
 
@@ -157,56 +195,90 @@ function MachinesPage() {
 
       </div>
 
+      {/* MACHINES */}
+
       <div className="flex justify-center gap-28 mt-24 relative z-10">
 
-  {/* MACHINE A LAVER */}
-  <Link to="/calendar">
-    <div
-      onClick={() => localStorage.setItem('selectedMachine', 'lave-linge')}
-      className="w-[350px] h-[420px]
-      bg-gradient-to-b from-[#FFF5F5] to-[#FADDDD]
-      rounded-[40px]
-      shadow-xl
-      flex flex-col items-center justify-center
-      cursor-pointer
-      transition duration-300
-      hover:scale-[1.04]
-      hover:shadow-2xl"
-    >
-      <img src={washingMachine} className="w-[230px] h-[230px]" />
+        {/* MACHINE A LAVER */}
 
-      <h2 className="mt-10 text-[36px] font-bold text-[#555555]">
-        MACHINE À LAVER ({laveLinge.length})
-      </h2>
+        <Link to="/calendar">
+
+          <div
+            onClick={() =>
+              localStorage.setItem(
+                'selectedMachine',
+                'lave-linge'
+              )
+            }
+            className="w-[350px] h-[420px]
+            bg-gradient-to-b from-[#FFF5F5] to-[#FADDDD]
+            rounded-[40px]
+            shadow-xl
+            flex flex-col items-center justify-center
+            cursor-pointer
+            transition duration-300
+            hover:scale-[1.04]
+            hover:shadow-2xl"
+          >
+
+            <img
+              src={washingMachine}
+              className="w-[230px] h-[230px]"
+            />
+
+            <h2 className="mt-10 text-[36px] font-bold text-[#555555]">
+
+              MACHINE À LAVER ({laveLinge.length})
+
+            </h2>
+
+          </div>
+
+        </Link>
+
+        {/* SECHE LINGE */}
+
+        <Link to="/calendar">
+
+          <div
+            onClick={() =>
+              localStorage.setItem(
+                'selectedMachine',
+                'seche-linge'
+              )
+            }
+            className="w-[350px] h-[420px]
+            bg-gradient-to-b from-[#FFF5F5] to-[#FADDDD]
+            rounded-[40px]
+            shadow-xl
+            flex flex-col items-center justify-center
+            cursor-pointer
+            transition duration-300
+            hover:scale-[1.04]
+            hover:shadow-2xl"
+          >
+
+            <img
+              src={dryerMachine}
+              className="w-[230px] h-[230px]"
+            />
+
+            <h2 className="mt-10 text-[36px] font-bold text-[#555555]">
+
+              SÈCHE LINGE ({secheLinge.length})
+
+            </h2>
+
+          </div>
+
+        </Link>
+
+      </div>
+
     </div>
-  </Link>
 
-  {/* SECHE LINGE */}
-  <Link to="/calendar">
-    <div
-      onClick={() => localStorage.setItem('selectedMachine', 'seche-linge')}
-      className="w-[350px] h-[420px]
-      bg-gradient-to-b from-[#FFF5F5] to-[#FADDDD]
-      rounded-[40px]
-      shadow-xl
-      flex flex-col items-center justify-center
-      cursor-pointer
-      transition duration-300
-      hover:scale-[1.04]
-      hover:shadow-2xl"
-    >
-      <img src={dryerMachine} className="w-[230px] h-[230px]" />
-
-      <h2 className="mt-10 text-[36px] font-bold text-[#555555]">
-        SÈCHE LINGE ({secheLinge.length})
-      </h2>
-    </div>
-  </Link>
-
-</div>
-
-    </div>
   )
+
 }
 
 export default MachinesPage

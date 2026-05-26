@@ -1,8 +1,11 @@
-import {useState } from 'react'
-import {useNavigate, Link } from 'react-router-dom'
+import { useEffect, useState } from 'react'
+
+import { useNavigate, Link } from 'react-router-dom'
 
 import Calendar from 'react-calendar'
 import 'react-calendar/dist/Calendar.css'
+
+import api from '../api/api'
 
 import profil from '../assets/profil.png'
 import logoBuanderie from '../assets/logo-buanderie.png'
@@ -17,11 +20,114 @@ function CalendarPage() {
 
   const [showNotifications, setShowNotifications] = useState(false)
 
+  const [student, setStudent] = useState(null)
+
+  const [notifications, setNotifications] = useState([])
+
   const navigate = useNavigate()
 
-  const studentData = JSON.parse(
-    localStorage.getItem('studentData')
-  )
+  useEffect(() => {
+
+    const fetchStudentData = async () => {
+
+      try {
+
+        const token = localStorage.getItem('token')
+
+        const response = await api.get(
+          '/student/profile',
+          {
+            headers: {
+              Authorization: `Bearer ${token}`
+            }
+          }
+        )
+
+        setStudent(response.data)
+
+      } catch (error) {
+
+        console.error(
+          'Erreur récupération étudiant :',
+          error
+        )
+
+      }
+
+    }
+
+    const fetchNotifications = async () => {
+
+      try {
+
+        const token = localStorage.getItem('token')
+
+        const response = await api.get(
+          '/student/notifications',
+          {
+            headers: {
+              Authorization: `Bearer ${token}`
+            }
+          }
+        )
+
+        setNotifications(response.data)
+
+      } catch (error) {
+
+        console.error(
+          'Erreur notifications :',
+          error
+        )
+
+      }
+
+    }
+
+    fetchStudentData()
+    fetchNotifications()
+
+  }, [])
+
+  const handleConfirmDate = () => {
+
+    const day = date.getDay()
+
+    /*
+      1 = lundi
+      2 = mardi
+    */
+
+    if (
+      student?.gender === 'Femme'
+      && day === 2
+    ) {
+
+      alert('Ce jour est réservé aux garçons')
+
+      return
+
+    }
+
+    if (
+      student?.gender === 'Homme'
+      && day === 1
+    ) {
+
+      alert('Ce jour est réservé aux filles')
+
+      return
+
+    }
+
+    localStorage.setItem(
+      'selectedDate',
+      date.toISOString()
+    )
+
+    navigate('/slots')
+
+  }
 
   return (
 
@@ -77,7 +183,9 @@ function CalendarPage() {
 
             <button
               onClick={() =>
-                setShowNotifications(!showNotifications)
+                setShowNotifications(
+                  !showNotifications
+                )
               }
             >
 
@@ -94,17 +202,47 @@ function CalendarPage() {
               <div className="absolute right-0 mt-4 w-[320px] bg-white rounded-[20px] shadow-lg p-5 z-50">
 
                 <h2 className="text-[22px] font-bold text-[#555555] mb-4">
+
                   Notifications
+
                 </h2>
 
-                <div className="bg-[#F9F9F9] p-4 rounded-[15px]">
+                <div className="space-y-4">
 
-                  <p className="text-[#555555]">
-                    {
-                      localStorage.getItem('studentAlert')
-                        || 'Aucune notification disponible'
-                    }
-                  </p>
+                  {notifications.length > 0 ? (
+
+                    notifications.map(
+                      (notification, index) => (
+
+                        <div
+                          key={index}
+                          className="bg-[#F9F9F9] p-4 rounded-[15px]"
+                        >
+
+                          <p className="text-[#555555]">
+
+                            {notification.message}
+
+                          </p>
+
+                        </div>
+
+                      )
+                    )
+
+                  ) : (
+
+                    <div className="bg-[#F9F9F9] p-4 rounded-[15px]">
+
+                      <p className="text-[#555555]">
+
+                        Aucune notification disponible
+
+                      </p>
+
+                    </div>
+
+                  )}
 
                 </div>
 
@@ -120,7 +258,9 @@ function CalendarPage() {
 
             <button
               onClick={() =>
-                setShowProfileMenu(!showProfileMenu)
+                setShowProfileMenu(
+                  !showProfileMenu
+                )
               }
               className="flex flex-col items-center"
             >
@@ -144,28 +284,31 @@ function CalendarPage() {
 
               <div className="absolute right-0 mt-4 w-[250px] bg-white rounded-[20px] shadow-lg p-4 z-50">
 
-                <button className="w-full text-left px-4 py-3 hover:bg-[#F5F5F5] rounded-xl transition">
+                <Link
+                  to="/history"
+                  className="block w-full px-4 py-3 hover:bg-[#F5F5F5] rounded-xl transition"
+                >
+                  Historique
+                </Link>
 
-                  <Link to="/history">
-                    Historique
-                  </Link>
+                <Link
+                  to="/personal-data"
+                  className="block w-full px-4 py-3 hover:bg-[#F5F5F5] rounded-xl transition"
+                >
+                  Données personnelles
+                </Link>
 
-                </button>
+                <button
+                  onClick={() => {
 
-                <button className="w-full text-left px-4 py-3 hover:bg-[#F5F5F5] rounded-xl transition">
+                    localStorage.removeItem('token')
 
-                  <Link to="/personal-data">
-                    Données personnelles
-                  </Link>
+                    navigate('/student/login')
 
-                </button>
-
-                <button className="w-full text-left px-4 py-3 hover:bg-red-100 text-red-500 rounded-xl transition">
-
-                  <Link to="/student/login">
-                    Se déconnecter
-                  </Link>
-
+                  }}
+                  className="block w-full text-left px-4 py-3 hover:bg-red-100 text-red-500 rounded-xl transition"
+                >
+                  Se déconnecter
                 </button>
 
               </div>
@@ -190,7 +333,9 @@ function CalendarPage() {
         </h1>
 
         <p className="text-gray-500 mt-2 text-lg">
+
           Sélectionnez la date de réservation
+
         </p>
 
       </div>
@@ -209,38 +354,7 @@ function CalendarPage() {
         </div>
 
         <button
-          onClick={() => {
-
-            const day = date.getDay()
-
-            if (
-              studentData?.gender === 'Femme'
-              && day === 2
-            ) {
-              alert(
-                'Ce jour est réservé aux garçons'
-              )
-              return
-            }
-
-            if (
-              studentData?.gender === 'Homme'
-              && day === 1
-            ) {
-              alert(
-                'Ce jour est réservé aux filles'
-              )
-              return
-            }
-
-            localStorage.setItem(
-              'selectedDate',
-              date.toDateString()
-            )
-
-            navigate('/slots')
-
-          }}
+          onClick={handleConfirmDate}
           className="mt-10 bg-[#F56B6B] text-white px-10 py-4 rounded-[15px] font-bold hover:scale-[1.03] transition"
           style={{ fontFamily: 'Playpen Sans' }}
         >
@@ -252,6 +366,7 @@ function CalendarPage() {
     </div>
 
   )
+
 }
 
 export default CalendarPage

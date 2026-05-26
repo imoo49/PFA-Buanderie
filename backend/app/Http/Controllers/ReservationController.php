@@ -8,47 +8,157 @@ use Illuminate\Http\Request;
 class ReservationController extends Controller
 {
     // 📄 Liste des réservations
-    public function index()
+    public function index(Request $request)
     {
-        return Reservation::with(['user', 'machine', 'creneau'])->get();
+        $user = $request->user();
+
+        if ($user->role === 'admin') {
+
+            return Reservation::with([
+                'user',
+                'machine',
+                'creneau'
+            ])->get();
+        }
+
+        return Reservation::with([
+            'user',
+            'machine',
+            'creneau'
+        ])
+        ->where('user_id', $user->id)
+        ->get();
     }
 
-    // ➕ Créer une réservation
+    // ➕ Créer réservation
     public function store(Request $request)
     {
         $request->validate([
-            'user_id' => 'required',
-            'machine_id' => 'required',
-            'creneau_id' => 'required',
-            'cycle' => 'required',
-            'date_reservation' => 'required|date',
+
+            'machine_id' => 'required|exists:machines,id',
+
+            'creneau_id' => 'required|exists:creneaux,id',
+
+            'dateReservation' => 'required|date',
+
+            'dureeCycle' => 'required|integer',
         ]);
 
+        $user = $request->user();
+
+        // 🔒 vérifier si créneau déjà réservé
+        $existe = Reservation::where('machine_id', $request->machine_id)
+
+            ->where('creneau_id', $request->creneau_id)
+
+            ->where('dateReservation', $request->dateReservation)
+
+            ->where('statut', '!=', 'annulee')
+
+            ->exists();
+
+        if ($existe) {
+
+            return response()->json([
+                'message' => 'Ce créneau est déjà réservé'
+            ], 409);
+        }
+
+        // 🔒 étudiant déjà réservé ce jour
+        $dejaReserve = Reservation::where('user_id', $user->id)
+
+            ->where('dateReservation', $request->dateReservation)
+
+            ->where('statut', '!=', 'annulee')
+
+            ->exists();
+
+        if ($dejaReserve) {
+
+            return response()->json([
+                'message' => 'Vous avez déjà une réservation ce jour'
+            ], 409);
+        }
+
+        // création réservation
         $reservation = Reservation::create([
-            'user_id' => $request->user_id,
+
+            'user_id' => $user->id,
+
             'machine_id' => $request->machine_id,
+
             'creneau_id' => $request->creneau_id,
-            'cycle' => $request->cycle,
+
+            'dateReservation' => $request->dateReservation,
+
+            'dureeCycle' => $request->dureeCycle,
+
             'statut' => 'en_attente',
-            'date_reservation' => $request->date_reservation,
         ]);
+
+        return response()->json([
+
+            'message' => 'Réservation créée avec succès',
+
+            'reservation' => $reservation->load([
+                'machine',
+                'creneau'
+            ])
+
+        ], 201);
+    }
+
+    // 🔍 afficher réservation
+    public function show(Request $request, $id)
+    {
+        $user = $request->user();
+
+        $reservation = Reservation::with([
+            'user',
+            'machine',
+            'creneau'
+        ])->findOrFail($id);
+
+        // sécurité
+        if (
+            $user->role !== 'admin'
+            &&
+            $reservation->user_id !== $user->id
+        ) {
+
+            return response()->json([
+                'message' => 'Accès refusé'
+            ], 403);
+        }
 
         return response()->json($reservation);
     }
 
-    // 🔍 Afficher une réservation
-    public function show($id)
+    // ❌ annuler réservation
+    public function destroy(Request $request, $id)
     {
-        return Reservation::with(['user', 'machine', 'creneau'])->findOrFail($id);
-    }
+        $user = $request->user();
 
-    // ❌ Supprimer une réservation
-    public function destroy($id)
-    {
-        Reservation::destroy($id);
+        $reservation = Reservation::findOrFail($id);
+
+        // sécurité
+        if (
+            $user->role !== 'admin'
+            &&
+            $reservation->user_id !== $user->id
+        ) {
+
+            return response()->json([
+                'message' => 'Accès refusé'
+            ], 403);
+        }
+
+        $reservation->update([
+            'statut' => 'annulee'
+        ]);
 
         return response()->json([
-            'message' => 'Réservation supprimée avec succès'
+            'message' => 'Réservation annulée avec succès'
         ]);
     }
 }

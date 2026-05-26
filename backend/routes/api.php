@@ -1,27 +1,63 @@
 <?php
 
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+
+use App\Http\Controllers\AuthController;
 use App\Http\Controllers\ReservationController;
 use App\Http\Controllers\MachineController;
 use App\Http\Controllers\CreneauController;
-use App\Http\Controllers\AuthController;
 
-// Authentification (non protégé)
+/*
+|--------------------------------------------------------------------------
+| ROUTES PUBLIQUES
+|--------------------------------------------------------------------------
+*/
+
+// Authentification
 Route::post('/register', [AuthController::class, 'register']);
 Route::post('/login', [AuthController::class, 'login']);
 
-// Routes protégées (besoin d'être connecté)
+/*
+|--------------------------------------------------------------------------
+| ROUTES PROTÉGÉES
+|--------------------------------------------------------------------------
+*/
+
 Route::middleware('auth:sanctum')->group(function () {
+
+    // USER CONNECTÉ
+    Route::get('/user', function (Request $request) {
+        return $request->user();
+    });
+
+    // LOGOUT
     Route::post('/logout', [AuthController::class, 'logout']);
-    
-    // Réservations
+
+    /*
+    |--------------------------------------------------------------------------
+    | RÉSERVATIONS
+    |--------------------------------------------------------------------------
+    */
+
     Route::apiResource('reservations', ReservationController::class);
-    
-    // Machines
+
+    /*
+    |--------------------------------------------------------------------------
+    | MACHINES
+    |--------------------------------------------------------------------------
+    */
+
     Route::get('/machines', [MachineController::class, 'index']);
     Route::get('/machines/{id}', [MachineController::class, 'show']);
-    
-    // Créneaux
+
+    /*
+    |--------------------------------------------------------------------------
+    | CRÉNEAUX
+    |--------------------------------------------------------------------------
+    */
+
     Route::get('/creneaux', [CreneauController::class, 'index']);
     Route::get('/creneaux/disponibles', [CreneauController::class, 'disponibles']);
+
 });

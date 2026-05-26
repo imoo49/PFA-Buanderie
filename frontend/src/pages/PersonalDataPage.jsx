@@ -1,9 +1,68 @@
+import { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
+
+import api from '../api/api'
 
 import logoBuanderie from '../assets/logo-buanderie.png'
 import logoEnsias from '../assets/logo-ensias.png'
 
 function PersonalDataPage() {
+
+  const [student, setStudent] = useState(null)
+
+  const [loading, setLoading] = useState(true)
+
+  useEffect(() => {
+
+    const fetchStudent = async () => {
+
+      try {
+
+        const token = localStorage.getItem('token')
+
+        const response = await api.get(
+          '/student/profile',
+          {
+            headers: {
+              Authorization: `Bearer ${token}`
+            }
+          }
+        )
+
+        setStudent(response.data)
+
+      } catch (error) {
+
+        console.error(
+          'Erreur récupération profil :',
+          error
+        )
+
+      } finally {
+
+        setLoading(false)
+
+      }
+
+    }
+
+    fetchStudent()
+
+  }, [])
+
+  if (loading) {
+
+    return (
+
+      <div className="min-h-screen flex items-center justify-center text-2xl">
+
+        Chargement...
+
+      </div>
+
+    )
+
+  }
 
   return (
 
@@ -83,7 +142,9 @@ function PersonalDataPage() {
               </label>
 
               <div className="bg-[#FFF5F5] p-5 rounded-[18px] text-[#555555] text-xl font-bold">
-                Imane ENSIAS
+
+                {student?.name || 'Nom indisponible'}
+
               </div>
 
             </div>
@@ -97,7 +158,9 @@ function PersonalDataPage() {
               </label>
 
               <div className="bg-[#FFF5F5] p-5 rounded-[18px] text-[#555555] text-xl font-bold">
-                imane_younsi@um5.ac.ma
+
+                {student?.email || 'Email indisponible'}
+
               </div>
 
             </div>
@@ -111,7 +174,9 @@ function PersonalDataPage() {
               </label>
 
               <div className="bg-[#FFF5F5] p-5 rounded-[18px] text-[#555555] text-xl font-bold">
-                Data & Software Sciences
+
+                {student?.filiere || 'Non définie'}
+
               </div>
 
             </div>
@@ -125,7 +190,9 @@ function PersonalDataPage() {
               </label>
 
               <div className="bg-[#FFF5F5] p-5 rounded-[18px] text-[#555555] text-xl font-bold">
-                ENSIAS2026
+
+                {student?.student_id || 'ID indisponible'}
+
               </div>
 
             </div>
@@ -161,6 +228,7 @@ function PersonalDataPage() {
     </div>
 
   )
+
 }
 
 export default PersonalDataPage

@@ -1,28 +1,73 @@
 import { useState } from 'react'
-import { Link,useNavigate } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
+
+import api from '../api/api'
 
 import logoBuanderie from '../assets/logo-buanderie.png'
 import logoEnsias from '../assets/logo-ensias.png'
 
 function StudentLogin() {
+
   const navigate = useNavigate()
+
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
+  const [error, setError] = useState('')
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
+
     e.preventDefault()
 
     if (!email || !password) {
-      alert("Veuillez remplir tous les champs")
+
+      setError("Veuillez remplir tous les champs")
       return
+
     }
 
-    alert("Connexion réussie")
+    try {
 
-    navigate('/student/dashboard')
+      const response = await api.post('/login', {
+
+        email,
+        password,
+
+      })
+
+      localStorage.setItem(
+        'token',
+        response.data.token
+      )
+
+      localStorage.setItem(
+        'user',
+        JSON.stringify(response.data.user)
+      )
+
+      alert("Connexion réussie")
+
+      navigate('/student/dashboard')
+
+    } catch (error) {
+
+      console.log(error)
+
+      if (error.response?.data?.message) {
+
+        setError(error.response.data.message)
+
+      } else {
+
+        setError("Erreur de connexion")
+
+      }
+
+    }
+
   }
 
   return (
+
     <div className="min-h-screen bg-[#F5F5F5] relative overflow-hidden">
 
       {/* BACKGROUND */}
@@ -86,6 +131,16 @@ function StudentLogin() {
           >
             Connexion
           </h1>
+
+          {/* ERROR */}
+
+          {error && (
+
+            <div className="bg-red-100 text-red-500 p-3 rounded-xl mb-5 text-center">
+              {error}
+            </div>
+
+          )}
 
           {/* EMAIL */}
 
@@ -158,7 +213,9 @@ function StudentLogin() {
       </div>
 
     </div>
+
   )
+
 }
 
 export default StudentLogin

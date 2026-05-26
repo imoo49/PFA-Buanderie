@@ -1,27 +1,89 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
+import { Link } from 'react-router-dom'
+
+import api from '../api/api'
 
 import logoBuanderie from '../assets/logo-buanderie.png'
 import logoEnsias from '../assets/logo-ensias.png'
 import profil from '../assets/profil.png'
-
-import { Link } from 'react-router-dom'
 import notificationIcon from '../assets/notification-icon.png'
+
 function SlotsPage() {
 
   const [selectedSlot, setSelectedSlot] = useState(null)
 
   const [showProfileMenu, setShowProfileMenu] = useState(false)
 
-  const slots = [
-    { hour: '07:00', status: 'free' },
-    { hour: '08:30', status: 'occupied' },
-    { hour: '10:00', status: 'free' },
-    { hour: '11:30', status: 'maintenance' },
-    { hour: '13:00', status: 'free' },
-    { hour: '14:30', status: 'free' },
-    { hour: '16:00', status: 'occupied' },
-    { hour: '17:30', status: 'free' },
-  ]
+  const [showNotifications, setShowNotifications] = useState(false)
+
+  const [slots, setSlots] = useState([])
+
+  const [loading, setLoading] = useState(true)
+
+  useEffect(() => {
+
+    const fetchSlots = async () => {
+
+      try {
+
+        const token = localStorage.getItem('token')
+
+        const machineId = localStorage.getItem('machineId')
+
+        const response = await api.get(
+          `/machines/${machineId}/slots`,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`
+            }
+          }
+        )
+
+        setSlots(response.data)
+
+      } catch (error) {
+
+        console.error(
+          'Erreur récupération créneaux :',
+          error
+        )
+
+      } finally {
+
+        setLoading(false)
+
+      }
+
+    }
+
+    fetchSlots()
+
+  }, [])
+
+  const handleSelectSlot = (slot) => {
+
+    setSelectedSlot(slot.hour)
+
+    localStorage.setItem(
+      'selectedSlot',
+      slot.hour
+    )
+
+  }
+
+  if (loading) {
+
+    return (
+
+      <div className="min-h-screen flex items-center justify-center text-2xl">
+
+        Chargement...
+
+      </div>
+
+    )
+
+  }
 
   return (
 
@@ -71,19 +133,21 @@ function SlotsPage() {
 
         <div className="flex items-center gap-5">
 
+          {/* NOTIFICATIONS */}
+
           <button
-  onClick={() =>
-    setShowNotifications(!showNotifications)
-  }
->
+            onClick={() =>
+              setShowNotifications(!showNotifications)
+            }
+          >
 
-  <img
-    src={notificationIcon}
-    alt="Notifications"
-    className="w-10 h-10 hover:scale-110 transition"
-  />
+            <img
+              src={notificationIcon}
+              alt="Notifications"
+              className="w-10 h-10 hover:scale-110 transition"
+            />
 
-</button>
+          </button>
 
           {/* PROFILE */}
 
@@ -129,12 +193,23 @@ function SlotsPage() {
                   Données personnelles
                 </Link>
 
-                <Link
-                  to="/student/login"
-                  className="block w-full px-4 py-3 hover:bg-red-100 text-red-500 rounded-xl transition"
+                <button
+                  onClick={() => {
+
+                    localStorage.removeItem('token')
+                    localStorage.removeItem('user')
+
+                  }}
+                  className="block w-full text-left px-4 py-3 hover:bg-red-100 text-red-500 rounded-xl transition"
                 >
-                  Se déconnecter
-                </Link>
+
+                  <Link to="/student/login">
+
+                    Se déconnecter
+
+                  </Link>
+
+                </button>
 
               </div>
 
@@ -173,8 +248,13 @@ function SlotsPage() {
 
             <button
               key={index}
+
               disabled={slot.status !== 'free'}
-              onClick={() => setSelectedSlot(slot.hour)}
+
+              onClick={() =>
+                handleSelectSlot(slot)
+              }
+
               className={`
                 w-[180px]
                 h-[120px]
@@ -197,6 +277,7 @@ function SlotsPage() {
                     : 'bg-white text-[#555555] hover:scale-[1.03]'
                 }
               `}
+
               style={{ fontFamily: 'Playpen Sans' }}
             >
 
@@ -229,18 +310,27 @@ function SlotsPage() {
       <div className="flex justify-center gap-10 mt-14 relative z-10">
 
         <div className="flex items-center gap-3">
+
           <div className="w-5 h-5 rounded-full bg-white border"></div>
+
           <span>Disponible</span>
+
         </div>
 
         <div className="flex items-center gap-3">
+
           <div className="w-5 h-5 rounded-full bg-red-200"></div>
+
           <span>Occupé</span>
+
         </div>
 
         <div className="flex items-center gap-3">
+
           <div className="w-5 h-5 rounded-full bg-yellow-200"></div>
+
           <span>Maintenance</span>
+
         </div>
 
       </div>
@@ -276,6 +366,7 @@ function SlotsPage() {
     </div>
 
   )
+
 }
 
 export default SlotsPage

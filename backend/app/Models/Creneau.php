@@ -1,28 +1,32 @@
 <?php
 
 namespace App\Models;
+
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 class Creneau extends Model
 {
-     use HasFactory;
+    use HasFactory;
+
+    // IMPORTANT
+    protected $table = 'creneaux';
 
     protected $fillable = [
-    'date',
-    'heureDebut',
-    'heureFin',
-    'statut',
-    'machine_id',
-];
+        'date',
+        'heureDebut',
+        'heureFin',
+        'statut',
+        'machine_id',
+    ];
 
-public function machine()
-{
-    return $this->belongsTo(Machine::class);
-}
+    public function machine()
+    {
+        return $this->belongsTo(Machine::class);
+    }
 
-public function reservations()
-{
-    return $this->hasMany(Reservation::class);
-}
+    public function reservations()
+    {
+        return $this->hasMany(Reservation::class);
+    }
 }

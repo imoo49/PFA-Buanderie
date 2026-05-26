@@ -1,30 +1,69 @@
+import { useEffect, useState } from 'react'
+
 import { Link } from 'react-router-dom'
+
+import api from '../api/api'
 
 import logoBuanderie from '../assets/logo-buanderie.png'
 import logoEnsias from '../assets/logo-ensias.png'
 
 function HistoryPage() {
 
-  const reservations = [
-    {
-      machine: 'LV-01',
-      date: '19 Mai 2026',
-      slot: '14:30',
-      status: 'Terminée'
-    },
-    {
-      machine: 'SL-02',
-      date: '21 Mai 2026',
-      slot: '09:00',
-      status: 'En attente'
-    },
-    {
-      machine: 'LV-03',
-      date: '25 Mai 2026',
-      slot: '17:30',
-      status: 'Confirmée'
-    },
-  ]
+  const [reservations, setReservations] = useState([])
+
+  const [loading, setLoading] = useState(true)
+
+  useEffect(() => {
+
+    const fetchReservations = async () => {
+
+      try {
+
+        const token = localStorage.getItem('token')
+
+        const response = await api.get(
+          '/student/reservations',
+          {
+            headers: {
+              Authorization: `Bearer ${token}`
+            }
+          }
+        )
+
+        setReservations(response.data)
+
+      } catch (error) {
+
+        console.error(
+          'Erreur récupération historique :',
+          error
+        )
+
+      } finally {
+
+        setLoading(false)
+
+      }
+
+    }
+
+    fetchReservations()
+
+  }, [])
+
+  if (loading) {
+
+    return (
+
+      <div className="min-h-screen flex items-center justify-center text-2xl">
+
+        Chargement...
+
+      </div>
+
+    )
+
+  }
 
   return (
 
@@ -93,46 +132,71 @@ function HistoryPage() {
 
         <div className="space-y-6">
 
-          {reservations.map((reservation, index) => (
+          {reservations.length > 0 ? (
 
-            <div
-              key={index}
-              className="bg-white rounded-[25px] shadow-lg p-8 flex justify-between items-center"
-            >
-
-              <div>
-
-                <h2
-                  className="text-[28px] font-bold text-[#555555]"
-                  style={{ fontFamily: 'Playpen Sans' }}
-                >
-                  {reservation.machine}
-                </h2>
-
-                <p className="text-gray-500 mt-2">
-                  {reservation.date}
-                </p>
-
-                <p className="text-gray-500">
-                  Créneau : {reservation.slot}
-                </p>
-
-              </div>
+            reservations.map((reservation, index) => (
 
               <div
-                className="bg-[#F56B6B]
-                text-white
-                px-6
-                py-3
-                rounded-[15px]
-                font-bold"
+                key={index}
+                className="bg-white rounded-[25px] shadow-lg p-8 flex justify-between items-center"
               >
-                {reservation.status}
+
+                <div>
+
+                  <h2
+                    className="text-[28px] font-bold text-[#555555]"
+                    style={{ fontFamily: 'Playpen Sans' }}
+                  >
+                    {reservation.machine_name}
+                  </h2>
+
+                  <p className="text-gray-500 mt-2">
+                    {reservation.date}
+                  </p>
+
+                  <p className="text-gray-500">
+                    Créneau : {reservation.slot}
+                  </p>
+
+                </div>
+
+                <div
+                  className={`
+                    px-6
+                    py-3
+                    rounded-[15px]
+                    font-bold
+                    text-white
+
+                    ${
+                      reservation.status === 'Terminée'
+                        ? 'bg-green-500'
+                        : reservation.status === 'En attente'
+                        ? 'bg-yellow-500'
+                        : 'bg-[#F56B6B]'
+                    }
+                  `}
+                >
+                  {reservation.status}
+                </div>
+
               </div>
+
+            ))
+
+          ) : (
+
+            <div className="bg-white p-10 rounded-[25px] text-center shadow-lg">
+
+              <h2 className="text-2xl text-gray-500 font-bold">
+
+                Aucune réservation trouvée
+
+              </h2>
 
             </div>
 
-          ))}
+          )}
 
         </div>
 
@@ -142,7 +206,8 @@ function HistoryPage() {
 
           <Link
             to="/student/dashboard"
-            className="bg-[#F56B6B]
+            className="
+            bg-[#F56B6B]
             text-white
             px-10
             py-4
@@ -150,7 +215,8 @@ function HistoryPage() {
             text-[22px]
             font-bold
             hover:scale-[1.03]
-            transition"
+            transition
+            "
             style={{ fontFamily: 'Playpen Sans' }}
           >
             Retour au profil
@@ -163,6 +229,7 @@ function HistoryPage() {
     </div>
 
   )
+
 }
 
 export default HistoryPage

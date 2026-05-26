@@ -9,15 +9,14 @@ class Reservation extends Model
 {
     use HasFactory;
 
-  protected $fillable = [
-    'user_id',
-    'creneau_id',
-    'dateReservation',
-    'dureeCycle',
-    'statut',
-];
-
-// Relations déjà présentes OK ✓
+    protected $fillable = [
+        'user_id',
+        'machine_id',
+        'creneau_id',
+        'dateReservation',
+        'dureeCycle',
+        'statut',
+    ];
 
     // relation vers user
     public function user()

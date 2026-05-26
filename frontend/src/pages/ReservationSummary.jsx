@@ -1,9 +1,81 @@
+import { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
+
+import api from '../api/api'
 
 import logoBuanderie from '../assets/logo-buanderie.png'
 import logoEnsias from '../assets/logo-ensias.png'
 
 function ReservationSummary() {
+
+  const [reservation, setReservation] = useState(null)
+
+  const [loading, setLoading] = useState(true)
+
+  useEffect(() => {
+
+    const createReservation = async () => {
+
+      try {
+
+        const token = localStorage.getItem('token')
+
+        const machineId = localStorage.getItem('machineId')
+
+        const selectedSlot =
+          localStorage.getItem('selectedSlot')
+
+        const response = await api.post(
+
+          '/reservations',
+
+          {
+            machine_id: machineId,
+            slot: selectedSlot
+          },
+
+          {
+            headers: {
+              Authorization: `Bearer ${token}`
+            }
+          }
+
+        )
+
+        setReservation(response.data)
+
+      } catch (error) {
+
+        console.error(
+          'Erreur réservation :',
+          error
+        )
+
+      } finally {
+
+        setLoading(false)
+
+      }
+
+    }
+
+    createReservation()
+
+  }, [])
+
+  if (loading) {
+
+    return (
+
+      <div className="min-h-screen flex items-center justify-center text-2xl">
+
+        Chargement...
+
+      </div>
+
+    )
+
+  }
 
   return (
 
@@ -74,9 +146,11 @@ function ReservationSummary() {
               bg-green-100
               flex items-center justify-center"
             >
+
               <span className="text-[55px]">
                 ✅
               </span>
+
             </div>
 
           </div>
@@ -105,7 +179,9 @@ function ReservationSummary() {
               </span>
 
               <span className="text-[#F56B6B] font-bold">
-                LV-01
+
+                {reservation?.machine?.name || 'LV-01'}
+
               </span>
 
             </div>
@@ -117,7 +193,9 @@ function ReservationSummary() {
               </span>
 
               <span className="text-[#555555] font-bold">
-                19 Mai 2026
+
+                {reservation?.date || '19 Mai 2026'}
+
               </span>
 
             </div>
@@ -129,7 +207,9 @@ function ReservationSummary() {
               </span>
 
               <span className="text-[#555555] font-bold">
-                14:30
+
+                {reservation?.slot || selectedSlot}
+
               </span>
 
             </div>
@@ -165,6 +245,7 @@ function ReservationSummary() {
     </div>
 
   )
+
 }
 
 export default ReservationSummary

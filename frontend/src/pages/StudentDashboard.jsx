@@ -1,60 +1,125 @@
 import { useEffect, useState } from 'react'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
+
+import api from '../api/api'
+
 import notificationIcon from '../assets/notification-icon.png'
 import logoBuanderie from '../assets/logo-buanderie.png'
 import logoEnsias from '../assets/logo-ensias.png'
 import profil from '../assets/profil.png'
+
 function StudentDashboard() {
+
+  const navigate = useNavigate()
+
   const [studentAlert, setStudentAlert] = useState('')
   const [showProfileMenu, setShowProfileMenu] = useState(false)
   const [showNotifications, setShowNotifications] = useState(false)
 
-  const machines = [
-    {
-      id: 1,
-      name: 'LV-01',
-      type: 'Machine à laver',
-      status: 'Libre',
-    },
-    {
-      id: 2,
-      name: 'LV-02',
-      type: 'Libérée dans 22 min',
-      status: 'Occupée',
-    },
-    {
-      id: 3,
-      name: 'LV-03',
-      type: 'En maintenance',
-      status: 'Maintenance',
-    },
-    {
-      id: 4,
-      name: 'SL-01',
-      type: 'Sèche-linge',
-      status: 'Libre',
-    },
-  ]
+  const [user, setUser] = useState(null)
+  const [machines, setMachines] = useState([])
+  const [reservations, setReservations] = useState([])
 
-  const reservations = [
-    {
-      machine: 'LV-01',
-      duration: 'Standard',
-      time: '15:30 - 17:00',
-    },
-    {
-      machine: 'SL-02',
-      duration: 'Court',
-      time: '09:00 - 10:00',
-    },
-    {
-      machine: 'LV-02',
-      duration: 'Long',
-      time: '17:00 - 19:30',
-    },
-  ]
+  useEffect(() => {
+
+    const fetchDashboard = async () => {
+
+      try {
+
+        const token = localStorage.getItem('token')
+
+        if (!token) {
+          navigate('/student/login')
+          return
+        }
+
+        // USER CONNECTÉ
+        const userResponse = await api.get('/user', {
+          headers: {
+            Authorization: `Bearer ${token}`
+          }
+        })
+
+        setUser(userResponse.data)
+
+        // MACHINES
+        const machinesResponse = await api.get('/machines', {
+          headers: {
+            Authorization: `Bearer ${token}`
+          }
+        })
+
+        setMachines(machinesResponse.data)
+
+        // RESERVATIONS
+        try {
+
+          const reservationsResponse = await api.get('/reservations', {
+            headers: {
+              Authorization: `Bearer ${token}`
+            }
+          })
+
+          setReservations(reservationsResponse.data)
+
+        } catch (error) {
+
+          console.log('Pas encore de route reservations')
+
+        }
+
+      } catch (error) {
+
+        console.error(error)
+
+        localStorage.removeItem('token')
+
+        navigate('/student/login')
+
+      }
+
+    }
+
+    fetchDashboard()
+
+  }, [])
+
+  const freeMachines = machines.filter(
+    machine => machine.status === 'Libre'
+  )
+
+  const activeReservations = reservations.length
+
+  const handleLogout = async () => {
+
+    try {
+
+      const token = localStorage.getItem('token')
+
+      await api.post(
+        '/logout',
+        {},
+        {
+          headers: {
+            Authorization: `Bearer ${token}`
+          }
+        }
+      )
+
+    } catch (error) {
+
+      console.log(error)
+
+    }
+
+    localStorage.removeItem('token')
+
+    navigate('/student/login')
+
+  }
 
   return (
+
     <div className="min-h-screen bg-[#F5F5F5] p-6">
 
       {/* HEADER */}
@@ -109,18 +174,18 @@ function StudentDashboard() {
           <div className="relative">
 
             <button
-  onClick={() =>
-    setShowNotifications(!showNotifications)
-  }
->
+              onClick={() =>
+                setShowNotifications(!showNotifications)
+              }
+            >
 
-  <img
-    src={notificationIcon}
-    alt="Notifications"
-    className="w-10 h-10 hover:scale-110 transition"
-  />
+              <img
+                src={notificationIcon}
+                alt="Notifications"
+                className="w-10 h-10 hover:scale-110 transition"
+              />
 
-</button>
+            </button>
 
             {showNotifications && (
 
@@ -138,10 +203,6 @@ function StudentDashboard() {
 
                   <div className="bg-[#F5F5F5] p-3 rounded-xl text-sm text-[#555555]">
                     Votre réservation est confirmée.
-                  </div>
-
-                  <div className="bg-[#F5F5F5] p-3 rounded-xl text-sm text-[#555555]">
-                    Pensez à récupérer votre linge.
                   </div>
 
                 </div>
@@ -164,10 +225,10 @@ function StudentDashboard() {
             >
 
               <img
-  src={profil}
-  alt="Profil"
-  className="w-10 h-10 rounded-full"
-/>
+                src={profil}
+                alt="Profil"
+                className="w-10 h-10 rounded-full"
+              />
 
               <span
                 className="text-[#555555]"
@@ -183,21 +244,26 @@ function StudentDashboard() {
               <div className="absolute right-0 mt-4 w-[250px] bg-white rounded-[20px] shadow-lg p-4 z-50">
 
                 <button className="w-full text-left px-4 py-3 hover:bg-[#F5F5F5] rounded-xl transition">
+
                   <Link to="/history">
-  Historique
-</Link>
+                    Historique
+                  </Link>
+
                 </button>
 
                 <button className="w-full text-left px-4 py-3 hover:bg-[#F5F5F5] rounded-xl transition">
+
                   <Link to="/personal-data">
-  Données personnelles
-</Link>
+                    Données personnelles
+                  </Link>
+
                 </button>
 
-                <button className="w-full text-left px-4 py-3 hover:bg-red-100 text-red-500 rounded-xl transition">
-                  <Link to="/student/login">
-  Se déconnecter
-</Link>
+                <button
+                  onClick={handleLogout}
+                  className="w-full text-left px-4 py-3 hover:bg-red-100 text-red-500 rounded-xl transition"
+                >
+                  Se déconnecter
                 </button>
 
               </div>
@@ -210,44 +276,52 @@ function StudentDashboard() {
 
       </header>
 
-      {/* WELCOME */}
+      {/* ALERT */}
+
       {studentAlert && (
 
-  <div className="bg-[#FFF3CD] border border-[#FFE69C] text-[#856404] p-5 rounded-[20px] mt-8 shadow-sm">
+        <div className="bg-[#FFF3CD] border border-[#FFE69C] text-[#856404] p-5 rounded-[20px] mt-8 shadow-sm">
 
-    <h3
-      className="font-bold text-[24px] mb-2"
-      style={{ fontFamily: 'Playpen Sans' }}
-    >
-      Alerte Admin ⚠️
-    </h3>
+          <h3
+            className="font-bold text-[24px] mb-2"
+            style={{ fontFamily: 'Playpen Sans' }}
+          >
+            Alerte Admin ⚠️
+          </h3>
 
-    <p className="text-[18px]">
-      {studentAlert}
-    </p>
+          <p className="text-[18px]">
+            {studentAlert}
+          </p>
 
-  </div>
+        </div>
 
-)}
+      )}
+
+      {/* WELCOME */}
+
       <div className="mt-12">
 
         <h2
           className="text-[38px] font-bold text-[#555555]"
           style={{ fontFamily: 'Playpen Sans' }}
         >
-          Bonjour, <span className="text-[#F56B6B]">Malak</span> 
+          Bonjour,
+          <span className="text-[#F56B6B]">
+            {' '}
+            {user?.name}
+          </span>
         </h2>
 
         <p className="text-gray-500 mt-1">
-          Mercredi 14 mai 2026
+          Bienvenue sur votre espace étudiant
         </p>
 
       </div>
 
       {/* STATS */}
-      
+
       <div className="flex gap-8 mt-10">
-      
+
         {/* ACTIVE */}
 
         <div className="bg-[#F05645] text-white rounded-[25px] p-6 w-[260px] shadow-md">
@@ -255,7 +329,7 @@ function StudentDashboard() {
           <div className="w-10 h-10 rounded-[12px] bg-white/20 mb-6"></div>
 
           <h1 className="text-[40px] font-bold">
-            3
+            {activeReservations}
           </h1>
 
           <p>
@@ -271,7 +345,7 @@ function StudentDashboard() {
           <div className="w-10 h-10 rounded-[12px] bg-green-100 mb-6"></div>
 
           <h1 className="text-[40px] font-bold text-[#555555]">
-            5
+            {freeMachines.length}
           </h1>
 
           <p className="text-[#555555]">
@@ -313,10 +387,6 @@ function StudentDashboard() {
               État des machines
             </h2>
 
-            <button className="text-[#F56B6B]">
-              Tout voir →
-            </button>
-
           </div>
 
           <div className="space-y-5">
@@ -335,7 +405,7 @@ function StudentDashboard() {
                   <div>
 
                     <h3 className="font-bold text-[#555555]">
-                      {machine.name}
+                      {machine.nom}
                     </h3>
 
                     <p className="text-gray-500 text-sm">
@@ -380,29 +450,23 @@ function StudentDashboard() {
               Réservations récentes
             </h2>
 
-            <button className="text-[#F56B6B]">
-              Historique →
-            </button>
-
           </div>
 
           <div className="space-y-5">
 
-            {reservations.map((reservation, index) => (
+            {reservations.length > 0 ? (
 
-              <div
-                key={index}
-                className="flex justify-between items-center bg-white p-5 rounded-[20px] shadow-sm"
-              >
+              reservations.map((reservation, index) => (
 
-                <div className="flex items-center gap-4">
-
-                  <div className="w-12 h-12 rounded-[12px] bg-[#EAF7EF]"></div>
+                <div
+                  key={index}
+                  className="flex justify-between items-center bg-white p-5 rounded-[20px] shadow-sm"
+                >
 
                   <div>
 
                     <h3 className="font-bold text-[#555555]">
-                      {reservation.machine} — {reservation.duration}
+                      {reservation.machine}
                     </h3>
 
                     <p className="text-gray-500 text-sm">
@@ -413,21 +477,17 @@ function StudentDashboard() {
 
                 </div>
 
-                <div className="text-right">
+              ))
 
-                  <h3 className="font-bold text-[#555555]">
-                    {reservation.time}
-                  </h3>
+            ) : (
 
-                  <p className="text-gray-500 text-sm">
-                    19 mai
-                  </p>
+              <div className="bg-white p-5 rounded-[20px] shadow-sm text-gray-500">
 
-                </div>
+                Aucune réservation
 
               </div>
 
-            ))}
+            )}
 
           </div>
 
@@ -436,7 +496,9 @@ function StudentDashboard() {
       </div>
 
     </div>
+
   )
+
 }
 
 export default StudentDashboard

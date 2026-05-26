@@ -1,5 +1,6 @@
 import { useState } from 'react'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
+import api from '../api/api'
 
 import allowedEmails from '../data/allowedEmails'
 
@@ -8,34 +9,78 @@ import logoEnsias from '../assets/logo-ensias.png'
 
 function StudentRegister() {
 
+  const navigate = useNavigate()
+
+  const [name, setName] = useState('')
+  const [prenom, setPrenom] = useState('')
   const [email, setEmail] = useState('')
+  const [telephone, setTelephone] = useState('')
+  const [numChambre, setNumChambre] = useState('')
   const [gender, setGender] = useState('')
+  const [password, setPassword] = useState('')
   const [error, setError] = useState('')
 
-const handleSubmit = (e) => {
-  e.preventDefault()
+  const handleSubmit = async (e) => {
 
-  if (!allowedEmails.includes(email.toLowerCase())) {
-    setError("Email institutionnel non autorisé")
-    return
+    e.preventDefault()
+
+    try {
+
+      if (!allowedEmails.includes(email.toLowerCase())) {
+
+        setError("Email institutionnel non autorisé")
+        return
+
+      }
+
+      const response = await api.post('/register', {
+
+        name,
+        prenom,
+        email,
+        password,
+        telephone,
+        numChambre,
+        genre: gender,
+
+      })
+
+      localStorage.setItem(
+        'token',
+        response.data.token
+      )
+
+      localStorage.setItem(
+        'user',
+        JSON.stringify(response.data.user)
+      )
+
+      setError('')
+
+      alert("Compte créé avec succès")
+
+      navigate('/student/dashboard')
+
+    } catch (error) {
+
+      console.log(error)
+
+      if (error.response?.data?.message) {
+
+        setError(error.response.data.message)
+
+      } else {
+
+        setError("Erreur lors de l'inscription")
+
+      }
+
+    }
+
   }
-
-  const studentData = {
-    email,
-    gender,
-  }
-
-  localStorage.setItem(
-    'studentData',
-    JSON.stringify(studentData)
-  )
-
-  setError('')
-
-  alert("Compte créé avec succès")
-}
 
   return (
+
     <div className="min-h-screen bg-[#F5F5F5] relative overflow-hidden">
 
       {/* BACKGROUND SHAPES */}
@@ -128,12 +173,35 @@ const handleSubmit = (e) => {
               className="block text-[24px] text-[#555555] mb-3"
               style={{ fontFamily: 'Playpen Sans' }}
             >
-              Nom & Prenom
+              Nom
             </label>
 
             <input
               type="text"
-              placeholder="Nom complet"
+              placeholder="Nom"
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+              className="w-full h-[55px] rounded-[12px] px-4 bg-white border border-[#D9D9D9] outline-none shadow-sm"
+            />
+
+          </div>
+
+          {/* PRENOM */}
+
+          <div className="mb-6">
+
+            <label
+              className="block text-[24px] text-[#555555] mb-3"
+              style={{ fontFamily: 'Playpen Sans' }}
+            >
+              Prénom
+            </label>
+
+            <input
+              type="text"
+              placeholder="Prénom"
+              value={prenom}
+              onChange={(e) => setPrenom(e.target.value)}
               className="w-full h-[55px] rounded-[12px] px-4 bg-white border border-[#D9D9D9] outline-none shadow-sm"
             />
 
@@ -161,9 +229,11 @@ const handleSubmit = (e) => {
               />
 
               {error && (
+
                 <p className="text-red-500 mt-2 font-medium">
                   {error}
                 </p>
+
               )}
 
             </div>
@@ -174,12 +244,14 @@ const handleSubmit = (e) => {
                 className="block text-[24px] text-[#555555] mb-3"
                 style={{ fontFamily: 'Playpen Sans' }}
               >
-                Numéro de telephone
+                Numéro de téléphone
               </label>
 
               <input
                 type="text"
                 placeholder="+212..."
+                value={telephone}
+                onChange={(e) => setTelephone(e.target.value)}
                 className="w-full h-[55px] rounded-[12px] px-4 bg-white border border-[#D9D9D9] outline-none shadow-sm"
               />
 
@@ -187,75 +259,98 @@ const handleSubmit = (e) => {
 
           </div>
 
-{/* ROOM + GENDER */}
+          {/* ROOM + GENDER */}
 
-<div className="flex gap-5 mb-10">
+          <div className="flex gap-5 mb-10">
 
-  {/* ROOM */}
+            {/* ROOM */}
 
-  <div className="flex-1">
+            <div className="flex-1">
 
-    <label
-      className="block text-[24px] text-[#555555] mb-3"
-      style={{ fontFamily: 'Playpen Sans' }}
-    >
-      Numéro de chambre
-    </label>
+              <label
+                className="block text-[24px] text-[#555555] mb-3"
+                style={{ fontFamily: 'Playpen Sans' }}
+              >
+                Numéro de chambre
+              </label>
 
-    <input
-      type="text"
-      placeholder="Ex : B-203"
-      className="w-full h-[55px] rounded-[12px] px-4 bg-white border border-[#D9D9D9] outline-none shadow-sm"
-    />
+              <input
+                type="text"
+                placeholder="Ex : B-203"
+                value={numChambre}
+                onChange={(e) => setNumChambre(e.target.value)}
+                className="w-full h-[55px] rounded-[12px] px-4 bg-white border border-[#D9D9D9] outline-none shadow-sm"
+              />
 
-  </div>
+            </div>
 
-  {/* GENDER */}
+            {/* GENDER */}
 
-  <div className="flex-1">
+            <div className="flex-1">
 
-    <label
-      className="block text-[24px] text-[#555555] mb-3"
-      style={{ fontFamily: 'Playpen Sans' }}
-    >
-      Genre
-    </label>
+              <label
+                className="block text-[24px] text-[#555555] mb-3"
+                style={{ fontFamily: 'Playpen Sans' }}
+              >
+                Genre
+              </label>
 
-    <div className="flex gap-8 h-[55px] items-center">
+              <div className="flex gap-8 h-[55px] items-center">
 
-      <label className="flex items-center gap-3 text-[#555555] text-lg">
+                <label className="flex items-center gap-3 text-[#555555] text-lg">
 
-        <input
-          type="radio"
-          name="gender"
-          value="Homme"
-          onChange={(e) => setGender(e.target.value)}
-          className="w-5 h-5 accent-[#F56B6B]"
-        />
+                  <input
+                    type="radio"
+                    name="gender"
+                    value="Homme"
+                    onChange={(e) => setGender(e.target.value)}
+                    className="w-5 h-5 accent-[#F56B6B]"
+                  />
 
-        Homme
+                  Homme
 
-      </label>
+                </label>
 
-      <label className="flex items-center gap-3 text-[#555555] text-lg">
+                <label className="flex items-center gap-3 text-[#555555] text-lg">
 
-        <input
-          type="radio"
-          name="gender"
-          value="Femme"
-          onChange={(e) => setGender(e.target.value)}
-          className="w-5 h-5 accent-[#F56B6B]"
-        />
+                  <input
+                    type="radio"
+                    name="gender"
+                    value="Femme"
+                    onChange={(e) => setGender(e.target.value)}
+                    className="w-5 h-5 accent-[#F56B6B]"
+                  />
 
-        Femme
+                  Femme
 
-      </label>
+                </label>
 
-    </div>
+              </div>
 
-  </div>
+            </div>
 
-</div>
+          </div>
+
+          {/* PASSWORD */}
+
+          <div className="mb-10">
+
+            <label
+              className="block text-[24px] text-[#555555] mb-3"
+              style={{ fontFamily: 'Playpen Sans' }}
+            >
+              Mot de passe
+            </label>
+
+            <input
+              type="password"
+              placeholder="********"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              className="w-full h-[55px] rounded-[12px] px-4 bg-white border border-[#D9D9D9] outline-none shadow-sm"
+            />
+
+          </div>
 
           {/* BUTTON */}
 
@@ -301,7 +396,9 @@ const handleSubmit = (e) => {
       </div>
 
     </div>
+
   )
+
 }
 
 export default StudentRegister

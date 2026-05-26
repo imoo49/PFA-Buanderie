@@ -7,80 +7,76 @@ import logoBuanderie from '../assets/logo-buanderie.png'
 import logoEnsias from '../assets/logo-ensias.png'
 
 function ReservationSummary() {
-
   const [reservation, setReservation] = useState(null)
 
   const [loading, setLoading] = useState(true)
 
+  const [error, setError] = useState(null)
+
+  const selectedSlot = localStorage.getItem('selectedSlot')
+  const selectedDate = localStorage.getItem('selectedDate')
+  const dateReservation = selectedDate
+    ? new Date(selectedDate).toISOString().split('T')[0]
+    : null
+
   useEffect(() => {
-
     const createReservation = async () => {
-
       try {
-
         const token = localStorage.getItem('token')
+        const machineId = localStorage.getItem('selectedMachineId')
+        const creneauId = localStorage.getItem('selectedCreneauId')
 
-        const machineId = localStorage.getItem('machineId')
-
-        const selectedSlot =
-          localStorage.getItem('selectedSlot')
+        if (!machineId || !creneauId || !dateReservation) {
+          setError('Données de réservation manquantes. Veuillez recommencer.')
+          setLoading(false)
+          return
+        }
 
         const response = await api.post(
-
           '/reservations',
-
           {
-            machine_id: machineId,
-            slot: selectedSlot
+            machine_id: parseInt(machineId),
+            creneau_id: parseInt(creneauId),
+            dateReservation: dateReservation,
+            dureeCycle: 60,
           },
-
           {
             headers: {
-              Authorization: `Bearer ${token}`
-            }
+              Authorization: `Bearer ${token}`,
+            },
           }
-
         )
 
-        setReservation(response.data)
+        setReservation(response.data.reservation)
 
-      } catch (error) {
-
-        console.error(
-          'Erreur réservation :',
-          error
-        )
-
+        localStorage.removeItem('selectedCreneauId')
+        localStorage.removeItem('selectedMachineId')
+        localStorage.removeItem('selectedSlot')
+        localStorage.removeItem('selectedDate')
+        localStorage.removeItem('selectedMachine')
+      } catch (err) {
+        const message =
+          err.response?.data?.message || 'Erreur lors de la réservation'
+        setError(message)
+        console.error('Erreur réservation :', err)
       } finally {
-
         setLoading(false)
-
       }
-
     }
 
     createReservation()
-
   }, [])
 
   if (loading) {
-
     return (
-
       <div className="min-h-screen flex items-center justify-center text-2xl">
-
         Chargement...
-
       </div>
-
     )
-
   }
 
   return (
-
     <div className="min-h-screen bg-[#F5F5F5] relative overflow-hidden">
-
       {/* BACKGROUND */}
 
       <div className="absolute top-[-200px] left-[-120px] w-[500px] h-[500px] bg-[#FADDDD] rounded-full opacity-60"></div>
@@ -90,19 +86,12 @@ function ReservationSummary() {
       {/* HEADER */}
 
       <header className="flex justify-between items-start px-10 py-6 relative z-10">
-
         {/* LEFT */}
 
         <div className="flex items-start gap-3">
-
-          <img
-            src={logoBuanderie}
-            alt="Buanderie"
-            className="w-24"
-          />
+          <img src={logoBuanderie} alt="Buanderie" className="w-24" />
 
           <div>
-
             <h1
               className="text-[38px] leading-none font-bold text-[#555555]"
               style={{ fontFamily: 'Playpen Sans' }}
@@ -116,17 +105,13 @@ function ReservationSummary() {
             >
               ENSIAS
             </h2>
-
           </div>
-
         </div>
-
       </header>
 
       {/* CONTENT */}
 
       <div className="flex justify-center items-center mt-20 relative z-10">
-
         <div
           className="w-[700px]
           bg-white
@@ -135,117 +120,112 @@ function ReservationSummary() {
           p-14
           text-center"
         >
+          {error ? (
+            <>
+              {/* ICON ERREUR */}
 
-          {/* ICON */}
+              <div className="flex justify-center">
+                <div className="w-28 h-28 rounded-full bg-red-100 flex items-center justify-center">
+                  <span className="text-[55px]">❌</span>
+                </div>
+              </div>
 
-          <div className="flex justify-center">
+              <h1
+                className="mt-8 text-[42px] font-bold text-[#555555]"
+                style={{ fontFamily: 'Playpen Sans' }}
+              >
+                Réservation échouée
+              </h1>
 
-            <div
-              className="w-28 h-28
-              rounded-full
-              bg-green-100
-              flex items-center justify-center"
-            >
+              <p className="text-red-500 mt-3 text-lg">{error}</p>
 
-              <span className="text-[55px]">
-                ✅
-              </span>
+              <div className="flex justify-center gap-6 mt-14">
+                <Link
+                  to="/machines"
+                  className="px-8 py-4 rounded-[18px] bg-[#F56B6B] text-white font-bold hover:scale-[1.03] transition"
+                  style={{ fontFamily: 'Playpen Sans' }}
+                >
+                  Réessayer
+                </Link>
+              </div>
+            </>
+          ) : (
+            <>
+              {/* ICON */}
 
-            </div>
+              <div className="flex justify-center">
+                <div className="w-28 h-28 rounded-full bg-green-100 flex items-center justify-center">
+                  <span className="text-[55px]">✅</span>
+                </div>
+              </div>
 
-          </div>
+              {/* TITLE */}
 
-          {/* TITLE */}
+              <h1
+                className="mt-8 text-[42px] font-bold text-[#555555]"
+                style={{ fontFamily: 'Playpen Sans' }}
+              >
+                Réservation confirmée
+              </h1>
 
-          <h1
-            className="mt-8 text-[42px] font-bold text-[#555555]"
-            style={{ fontFamily: 'Playpen Sans' }}
-          >
-            Réservation confirmée
-          </h1>
+              <p className="text-gray-500 mt-3 text-lg">
+                Votre réservation a été enregistrée avec succès
+              </p>
 
-          <p className="text-gray-500 mt-3 text-lg">
-            Votre réservation a été enregistrée avec succès
-          </p>
+              {/* DETAILS */}
 
-          {/* DETAILS */}
+              <div className="mt-12 space-y-5 text-left">
+                <div className="bg-[#FFF5F5] rounded-[18px] p-5 flex justify-between">
+                  <span className="font-bold text-[#555555]">Machine</span>
 
-          <div className="mt-12 space-y-5 text-left">
+                  <span className="text-[#F56B6B] font-bold">
+                    {reservation?.machine?.type} — {reservation?.machine?.numero}
+                  </span>
+                </div>
 
-            <div className="bg-[#FFF5F5] rounded-[18px] p-5 flex justify-between">
+                <div className="bg-[#FFF5F5] rounded-[18px] p-5 flex justify-between">
+                  <span className="font-bold text-[#555555]">Date</span>
 
-              <span className="font-bold text-[#555555]">
-                Machine
-              </span>
+                  <span className="text-[#555555] font-bold">
+                    {reservation?.dateReservation}
+                  </span>
+                </div>
 
-              <span className="text-[#F56B6B] font-bold">
+                <div className="bg-[#FFF5F5] rounded-[18px] p-5 flex justify-between">
+                  <span className="font-bold text-[#555555]">Créneau</span>
 
-                {reservation?.machine?.name || 'LV-01'}
+                  <span className="text-[#555555] font-bold">
+                    {reservation?.creneau?.heureDebut?.substring(0, 5)} -{' '}
+                    {reservation?.creneau?.heureFin?.substring(0, 5)}
+                  </span>
+                </div>
+              </div>
 
-              </span>
+              {/* BUTTONS */}
 
-            </div>
+              <div className="flex justify-center gap-6 mt-14">
+                <Link
+                  to="/student/dashboard"
+                  className="px-8 py-4 rounded-[18px] bg-white border-2 border-[#F56B6B] text-[#F56B6B] font-bold hover:scale-[1.03] transition"
+                  style={{ fontFamily: 'Playpen Sans' }}
+                >
+                  Tableau de bord
+                </Link>
 
-            <div className="bg-[#FFF5F5] rounded-[18px] p-5 flex justify-between">
-
-              <span className="font-bold text-[#555555]">
-                Date
-              </span>
-
-              <span className="text-[#555555] font-bold">
-
-                {reservation?.date || '19 Mai 2026'}
-
-              </span>
-
-            </div>
-
-            <div className="bg-[#FFF5F5] rounded-[18px] p-5 flex justify-between">
-
-              <span className="font-bold text-[#555555]">
-                Créneau
-              </span>
-
-              <span className="text-[#555555] font-bold">
-
-                {reservation?.slot || selectedSlot}
-
-              </span>
-
-            </div>
-
-          </div>
-
-          {/* BUTTONS */}
-
-          <div className="flex justify-center gap-6 mt-14">
-
-            <Link
-              to="/student/dashboard"
-              className="px-8 py-4 rounded-[18px] bg-white border-2 border-[#F56B6B] text-[#F56B6B] font-bold hover:scale-[1.03] transition"
-              style={{ fontFamily: 'Playpen Sans' }}
-            >
-              Tableau de bord
-            </Link>
-
-            <Link
-              to="/machines"
-              className="px-8 py-4 rounded-[18px] bg-[#F56B6B] text-white font-bold hover:scale-[1.03] transition"
-              style={{ fontFamily: 'Playpen Sans' }}
-            >
-              Nouvelle réservation
-            </Link>
-
-          </div>
-
+                <Link
+                  to="/machines"
+                  className="px-8 py-4 rounded-[18px] bg-[#F56B6B] text-white font-bold hover:scale-[1.03] transition"
+                  style={{ fontFamily: 'Playpen Sans' }}
+                >
+                  Nouvelle réservation
+                </Link>
+              </div>
+            </>
+          )}
         </div>
-
       </div>
-
     </div>
-
   )
-
 }
 
 export default ReservationSummary

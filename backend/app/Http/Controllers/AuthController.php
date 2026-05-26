@@ -49,6 +49,8 @@ class AuthController extends Controller
             'genre' => $request->genre,
         ]);
 
+        $user->sendEmailVerificationNotification(); // ← AJOUTÉ
+
         $token = $user->createToken('auth_token')->plainTextToken;
 
         return response()->json([
@@ -74,6 +76,13 @@ class AuthController extends Controller
         }
 
         $user = User::where('email', $request->email)->first();
+
+        // Bloquer si email non vérifié ← AJOUTÉ
+        if (!$user->hasVerifiedEmail()) {
+            return response()->json([
+                'message' => 'Veuillez vérifier votre adresse email avant de vous connecter.'
+            ], 403);
+        }
 
         // Supprimer anciens tokens
         $user->tokens()->delete();

@@ -1,42 +1,70 @@
 import { useState } from 'react'
-import { Link,useNavigate } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
+
+import api from '../api/api'
 
 import logoBuanderie from '../assets/logo-buanderie.png'
 import logoEnsias from '../assets/logo-ensias.png'
 
 function AdminLogin() {
+
   const navigate = useNavigate()
+
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
+  const [error, setError] = useState('')
+  const [loading, setLoading] = useState(false)
 
-  const handleSubmit = (e) => {
-  e.preventDefault()
+  const handleSubmit = async (e) => {
 
-  if (!email || !password) {
-    alert("Veuillez remplir tous les champs")
-    return
+    e.preventDefault()
+
+    if (!email || !password) {
+      setError("Veuillez remplir tous les champs")
+      return
+    }
+
+    setLoading(true)
+    setError('')
+
+    try {
+
+      const response = await api.post('/login', {
+        email,
+        password,
+      })
+
+      const { token, user } = response.data
+
+      if (user.role !== 'admin') {
+        setError("Accès refusé. Ce compte n'est pas un compte administrateur.")
+        setLoading(false)
+        return
+      }
+
+      localStorage.setItem('token', token)
+      localStorage.setItem('user', JSON.stringify(user))
+
+      navigate('/admin/dashboard')
+
+    } catch (error) {
+
+      console.log(error)
+
+      if (error.response?.data?.message) {
+        setError(error.response.data.message)
+      } else {
+        setError("Email ou mot de passe incorrect")
+      }
+
+    } finally {
+      setLoading(false)
+    }
+
   }
-
-  // COMPTE ADMIN TEMPORAIRE
-
-  const adminEmail = "admin@ensias.ma"
-  const adminPassword = "admin123"
-
-  if (
-    email === adminEmail &&
-    password === adminPassword
-  ) {
-    alert("Connexion admin réussie")
-
-    navigate('/admin/dashboard')
-  }
-
-  else {
-    alert("Email ou mot de passe incorrect")
-  }
-}
 
   return (
+
     <div className="min-h-screen bg-[#F5F5F5] relative overflow-hidden">
 
       {/* BACKGROUND */}
@@ -109,6 +137,14 @@ function AdminLogin() {
             Connexion Admin
           </h1>
 
+          {/* ERROR */}
+
+          {error && (
+            <div className="bg-red-100 text-red-500 p-3 rounded-xl mb-5 text-center">
+              {error}
+            </div>
+          )}
+
           {/* EMAIL */}
 
           <div className="mb-6">
@@ -122,7 +158,7 @@ function AdminLogin() {
 
             <input
               type="email"
-              placeholder="admin@ensias.ma"
+              placeholder="admin@um5.ac.ma"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               className="w-full h-[55px] rounded-[12px] px-4 bg-white border border-[#D9D9D9] outline-none shadow-sm"
@@ -155,10 +191,11 @@ function AdminLogin() {
 
           <button
             type="submit"
-            className="w-full bg-[#F56B6B] text-white py-4 rounded-[15px] font-bold shadow-md hover:scale-[1.02] duration-200"
+            disabled={loading}
+            className="w-full bg-[#F56B6B] text-white py-4 rounded-[15px] font-bold shadow-md hover:scale-[1.02] duration-200 disabled:opacity-60 disabled:cursor-not-allowed disabled:hover:scale-100"
             style={{ fontFamily: 'Playpen Sans' }}
           >
-            SE CONNECTER
+            {loading ? 'Connexion...' : 'SE CONNECTER'}
           </button>
 
         </form>
@@ -166,7 +203,9 @@ function AdminLogin() {
       </div>
 
     </div>
+
   )
+
 }
 
 export default AdminLogin

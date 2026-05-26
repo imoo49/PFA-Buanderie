@@ -142,7 +142,9 @@ const allowedEmails = [
   "mohammed_rabouh@um5.ac.ma",
   "mohamedrida_retbi@um5.ac.ma",
   "imane_younsi@um5.ac.ma",
-  "malak_zikri@um5.ac.ma"
+  "malak_zikri@um5.ac.ma",
+  "oumama_elghadouini@um5.ac.ma",
+  "khaoula_rougui@um5.ac.ma"
   // continuer les autres emails ici...
 ]
 

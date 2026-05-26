@@ -1,106 +1,92 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 
 import logoBuanderie from '../assets/logo-buanderie.png'
 import logoEnsias from '../assets/logo-ensias.png'
 import profil from '../assets/profil.png'
+import api from '../api/api'
+
 function AdminDashboard() {
   const [alertMessage, setAlertMessage] = useState('')
   const [showProfile, setShowProfile] = useState(false)
-  const handleSendAlert = () => {
+  const [machines, setMachines] = useState([])
+  const [reservations, setReservations] = useState([])
+  const [loading, setLoading] = useState(true)
 
-  if (!alertMessage) {
-    alert('Veuillez écrire une alerte')
-    return
-  }
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const token = localStorage.getItem('token')
+        const headers = { Authorization: `Bearer ${token}` }
 
-  localStorage.setItem('studentAlert', alertMessage)
+        const [machinesRes, reservationsRes] = await Promise.all([
+          api.get('/machines', { headers }),
+          api.get('/reservations', { headers }),
+        ])
 
-  alert('Alerte envoyée aux étudiants')
-
-  setAlertMessage('')
-}
-  const [machines, setMachines] = useState([
-    {
-      id: 1,
-      name: 'LV-01',
-      status: 'Libre',
-    },
-    {
-      id: 2,
-      name: 'SL-02',
-      status: 'Occupée',
-    },
-    {
-      id: 3,
-      name: 'LV-03',
-      status: 'Hors service',
-    },
-  ])
-
-  const [reservations] = useState([
-    {
-      id: 1,
-      student: 'Malak Zikri',
-      machine: 'LV-01',
-      time: '14:00',
-      duration: '1h30',
-      status: 'Confirmée',
-    },
-    {
-      id: 2,
-      student: 'Sara Amrani',
-      machine: 'SL-02',
-      time: '16:30',
-      duration: '1h',
-      status: 'En attente',
-    },
-    {
-      id: 3,
-      student: 'Yassine Alaoui',
-      machine: 'LV-03',
-      time: '18:00',
-      duration: '2h',
-      status: 'Terminée',
-    },
-  ])
-
-  const addMachine = () => {
-
-    const newMachine = {
-      id: machines.length + 1,
-      name: `LV-0${machines.length + 1}`,
-      status: 'Libre',
+        setMachines(machinesRes.data)
+        setReservations(reservationsRes.data)
+      } catch (error) {
+        console.error('Erreur chargement admin :', error)
+      } finally {
+        setLoading(false)
+      }
     }
 
-    setMachines([...machines, newMachine])
+    fetchData()
+  }, [])
+
+  const today = new Date().toISOString().split('T')[0]
+
+  const todayReservations = reservations.filter(
+    (r) => r.dateReservation === today && r.statut !== 'annulee'
+  )
+
+  const getMachineStatus = (machineId) => {
+    const occupied = reservations.some(
+      (r) =>
+        r.machine_id === machineId &&
+        r.dateReservation === today &&
+        r.statut !== 'annulee'
+    )
+    return occupied ? 'Occupée' : 'Libre'
+  }
+
+  const handleSendAlert = () => {
+    if (!alertMessage) {
+      alert('Veuillez écrire une alerte')
+      return
+    }
+
+    localStorage.setItem('studentAlert', alertMessage)
+
+    alert('Alerte envoyée aux étudiants')
+
+    setAlertMessage('')
   }
 
   const deleteMachine = (id) => {
-    setMachines(
-      machines.filter((machine) => machine.id !== id)
+    setMachines(machines.filter((machine) => machine.id !== id))
+  }
+
+  if (loading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center text-2xl">
+        Chargement...
+      </div>
     )
   }
 
   return (
-
     <div className="min-h-screen bg-[#F5F5F5] p-6">
-
       {/* HEADER */}
 
       <header className="flex justify-between items-start">
-
         {/* LEFT */}
 
         <div className="flex items-start gap-3">
-
-          <img
-            src={logoBuanderie}
-            alt="Buanderie"
-            className="w-24"
-          />
+          <img src={logoBuanderie} alt="Buanderie" className="w-24" />
 
           <div>
-
             <h1
               className="text-[38px] leading-none font-bold text-[#555555]"
               style={{ fontFamily: 'Playpen Sans' }}
@@ -114,9 +100,7 @@ function AdminDashboard() {
             >
               ENSIAS
             </h2>
-
           </div>
-
         </div>
 
         {/* CENTER */}
@@ -131,27 +115,18 @@ function AdminDashboard() {
         {/* RIGHT */}
 
         <div className="flex items-center gap-6 relative">
-
-          <img
-            src={logoEnsias}
-            alt="ENSIAS"
-            className="w-24"
-          />
+          <img src={logoEnsias} alt="ENSIAS" className="w-24" />
 
           <div className="relative">
-
             <button
-              onClick={() =>
-                setShowProfile(!showProfile)
-              }
+              onClick={() => setShowProfile(!showProfile)}
               className="flex flex-col items-center"
             >
-
               <img
-  src={profil}
-  alt="Admin"
-  className="w-12 h-12 rounded-full object-cover"
-/>
+                src={profil}
+                alt="Admin"
+                className="w-12 h-12 rounded-full object-cover"
+              />
 
               <span
                 className="text-[#555555]"
@@ -159,212 +134,158 @@ function AdminDashboard() {
               >
                 Admin
               </span>
-
             </button>
 
             {showProfile && (
-
               <div className="absolute right-0 mt-4 w-[220px] bg-white rounded-[20px] shadow-lg p-4 z-50">
-
                 <button className="w-full text-left px-4 py-3 hover:bg-[#F5F5F5] rounded-xl transition">
                   Paramètres
                 </button>
 
-                <button className="w-full text-left px-4 py-3 hover:bg-red-100 text-red-500 rounded-xl transition">
+                <button
+                  onClick={() => {
+                    localStorage.removeItem('token')
+                    window.location.href = '/admin/login'
+                  }}
+                  className="w-full text-left px-4 py-3 hover:bg-red-100 text-red-500 rounded-xl transition"
+                >
                   Déconnexion
                 </button>
-
               </div>
-
             )}
-
           </div>
-
         </div>
-
       </header>
 
       {/* WELCOME */}
 
       <div className="mt-12">
-
         <h2
           className="text-[38px] font-bold text-[#555555]"
           style={{ fontFamily: 'Playpen Sans' }}
         >
-          Bonjour Admin 
+          Bonjour Admin
         </h2>
 
-        <p className="text-gray-500 mt-1">
-          Gérez les machines et les réservations
-        </p>
-
+        <p className="text-gray-500 mt-1">Gérez les machines et les réservations</p>
       </div>
 
       {/* STATS */}
 
       <div className="grid grid-cols-4 gap-8 mt-10">
-
         <div className="bg-[#F56B6B] text-white rounded-[25px] p-6 shadow-md">
+          <h1 className="text-[40px] font-bold">{reservations.length}</h1>
 
-          <h1 className="text-[40px] font-bold">
-            24
-          </h1>
-
-          <p>
-            Réservations
-          </p>
-
+          <p>Réservations</p>
         </div>
 
         <div className="bg-white rounded-[25px] p-6 shadow-md">
-
           <h1 className="text-[40px] font-bold text-[#555555]">
-            56
+            {[...new Set(reservations.map((r) => r.user_id))].length}
           </h1>
 
-          <p className="text-[#555555]">
-            Étudiants
-          </p>
-
+          <p className="text-[#555555]">Étudiants</p>
         </div>
 
         <div className="bg-white rounded-[25px] p-6 shadow-md">
+          <h1 className="text-[40px] font-bold text-[#555555]">{machines.length}</h1>
 
-          <h1 className="text-[40px] font-bold text-[#555555]">
-            {machines.length}
-          </h1>
-
-          <p className="text-[#555555]">
-            Machines
-          </p>
-
+          <p className="text-[#555555]">Machines</p>
         </div>
 
         <div className="bg-white rounded-[25px] p-6 shadow-md">
-
           <h1 className="text-[40px] font-bold text-[#555555]">
-            12
+            {todayReservations.length}
           </h1>
 
-          <p className="text-[#555555]">
-            Aujourd’hui
-          </p>
-
+          <p className="text-[#555555]">Aujourd'hui</p>
         </div>
-
       </div>
 
       {/* CONTENT */}
 
       <div className="grid grid-cols-2 gap-10 mt-14">
-
         {/* MACHINES */}
 
         <div className="bg-white rounded-[30px] p-8 shadow-sm">
-
           <div className="flex justify-between items-center mb-8">
-
             <h2
               className="text-[30px] font-bold text-[#555555]"
               style={{ fontFamily: 'Playpen Sans' }}
             >
               Gestion des machines
             </h2>
-
-            <button
-              onClick={addMachine}
-              className="bg-[#F56B6B] text-white px-5 py-3 rounded-[15px] font-bold hover:scale-[1.03] transition"
-            >
-              + Ajouter
-            </button>
-
           </div>
 
           <div className="space-y-5">
-
-            {machines.map((machine) => (
-
-              <div
-                key={machine.id}
-                className="flex justify-between items-center bg-[#F9F9F9] p-5 rounded-[20px]"
-              >
-
-                <div>
-
-                  <h3 className="font-bold text-[#555555] text-lg">
-                    {machine.name}
-                  </h3>
-
-                  <span
-                    className={`px-4 py-1 rounded-full text-sm font-bold
-                    ${
-                      machine.status === 'Libre'
-                        ? 'bg-green-100 text-green-600'
-                        : machine.status === 'Occupée'
-                        ? 'bg-yellow-100 text-yellow-600'
-                        : 'bg-red-100 text-red-500'
-                    }`}
-                  >
-                    {machine.status}
-                  </span>
-
-                </div>
-
-                <button
-                  onClick={() =>
-                    deleteMachine(machine.id)
-                  }
-                  className="bg-red-100 text-red-500 px-4 py-2 rounded-[12px] hover:bg-red-200 transition"
+            {machines.map((machine) => {
+              const status = getMachineStatus(machine.id)
+              return (
+                <div
+                  key={machine.id}
+                  className="flex justify-between items-center bg-[#F9F9F9] p-5 rounded-[20px]"
                 >
-                  Supprimer
-                </button>
+                  <div>
+                    <h3 className="font-bold text-[#555555] text-lg">
+                      {machine.numero}
+                    </h3>
 
-              </div>
+                    <span
+                      className={`px-4 py-1 rounded-full text-sm font-bold
+                      ${
+                        status === 'Libre'
+                          ? 'bg-green-100 text-green-600'
+                          : 'bg-yellow-100 text-yellow-600'
+                      }`}
+                    >
+                      {status}
+                    </span>
+                  </div>
 
-            ))}
-
+                  <button
+                    onClick={() => deleteMachine(machine.id)}
+                    className="bg-red-100 text-red-500 px-4 py-2 rounded-[12px] hover:bg-red-200 transition"
+                  >
+                    Supprimer
+                  </button>
+                </div>
+              )
+            })}
           </div>
-
         </div>
+
         {/* ALERT SECTION */}
 
-<div className="bg-white p-8 rounded-[30px] shadow-md mt-10">
+        <div className="bg-white p-8 rounded-[30px] shadow-md mt-10">
+          <div className="flex justify-between items-center mb-6">
+            <h2
+              className="text-[30px] font-bold text-[#555555]"
+              style={{ fontFamily: 'Playpen Sans' }}
+            >
+              Envoyer une alerte
+            </h2>
+          </div>
 
-  <div className="flex justify-between items-center mb-6">
+          <textarea
+            placeholder="Ex: La buanderie sera fermée demain de 14h à 18h."
+            value={alertMessage}
+            onChange={(e) => setAlertMessage(e.target.value)}
+            className="w-full h-[120px] rounded-[20px] border border-[#E5E5E5] p-5 outline-none resize-none"
+          />
 
-    <h2
-      className="text-[30px] font-bold text-[#555555]"
-      style={{ fontFamily: 'Playpen Sans' }}
-    >
-      Envoyer une alerte
-    </h2>
-
-  </div>
-
-  <textarea
-    placeholder="Ex: La buanderie sera fermée demain de 14h à 18h."
-    value={alertMessage}
-    onChange={(e) => setAlertMessage(e.target.value)}
-    className="w-full h-[120px] rounded-[20px] border border-[#E5E5E5] p-5 outline-none resize-none"
-  />
-
-  <button
-    onClick={handleSendAlert}
-    className="mt-5 bg-[#F56B6B] text-white px-8 py-4 rounded-[15px] font-bold hover:scale-[1.02] transition"
-    style={{ fontFamily: 'Playpen Sans' }}
-  >
-    Envoyer l’alerte
-  </button>
-
-</div>
+          <button
+            onClick={handleSendAlert}
+            className="mt-5 bg-[#F56B6B] text-white px-8 py-4 rounded-[15px] font-bold hover:scale-[1.02] transition"
+            style={{ fontFamily: 'Playpen Sans' }}
+          >
+            Envoyer l'alerte
+          </button>
+        </div>
 
         {/* RESERVATIONS */}
 
         <div className="bg-white rounded-[30px] p-8 shadow-sm">
-
           <div className="flex justify-between items-center mb-8">
-
             <h2
               className="text-[30px] font-bold text-[#555555]"
               style={{ fontFamily: 'Playpen Sans' }}
@@ -372,69 +293,54 @@ function AdminDashboard() {
               Réservations récentes
             </h2>
 
-            <button className="text-[#F56B6B] font-semibold">
-              Voir tout →
-            </button>
-
+            <button className="text-[#F56B6B] font-semibold">Voir tout →</button>
           </div>
 
           <div className="space-y-5">
-
-            {reservations.map((reservation) => (
-
+            {reservations.slice(0, 5).map((reservation) => (
               <div
                 key={reservation.id}
                 className="bg-[#F9F9F9] p-5 rounded-[20px] hover:shadow-md transition cursor-pointer"
                 onClick={() =>
                   alert(
-                    `Étudiant : ${reservation.student}
-Machine : ${reservation.machine}
-Horaire : ${reservation.time}
-Durée : ${reservation.duration}
-Statut : ${reservation.status}`
+                    `Étudiant : ${reservation.user?.name} ${reservation.user?.prenom}
+Machine : ${reservation.machine?.numero}
+Date : ${reservation.dateReservation}
+Créneau : ${reservation.creneau?.heureDebut} - ${reservation.creneau?.heureFin}
+Statut : ${reservation.statut}`
                   )
                 }
               >
-
                 <div className="flex justify-between items-center">
-
                   <div>
-
                     <h3 className="font-bold text-[#555555] text-lg">
-                      {reservation.student}
+                      {reservation.user?.name} {reservation.user?.prenom}
                     </h3>
 
                     <p className="text-gray-500">
-                      {reservation.machine} • {reservation.time}
+                      {reservation.machine?.numero} •{' '}
+                      {reservation.creneau?.heureDebut}
                     </p>
-
                   </div>
 
                   <span
                     className={`px-4 py-2 rounded-full text-sm font-bold
                     ${
-                      reservation.status === 'Confirmée'
+                      reservation.statut === 'confirme'
                         ? 'bg-green-100 text-green-600'
-                        : reservation.status === 'En attente'
+                        : reservation.statut === 'en_attente'
                         ? 'bg-yellow-100 text-yellow-600'
                         : 'bg-red-100 text-red-500'
                     }`}
                   >
-                    {reservation.status}
+                    {reservation.statut}
                   </span>
-
                 </div>
-
               </div>
-
             ))}
-
           </div>
-
         </div>
-
       </div>
-
     </div>
   )
 }

@@ -13,55 +13,50 @@ function StudentLogin() {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [error, setError] = useState('')
+  const [loading, setLoading] = useState(false)
 
   const handleSubmit = async (e) => {
 
     e.preventDefault()
 
     if (!email || !password) {
-
       setError("Veuillez remplir tous les champs")
       return
-
     }
+
+    setLoading(true)
+    setError('')
 
     try {
 
       const response = await api.post('/login', {
-
         email,
         password,
-
       })
 
-      localStorage.setItem(
-        'token',
-        response.data.token
-      )
+      const { token, user } = response.data
 
-      localStorage.setItem(
-        'user',
-        JSON.stringify(response.data.user)
-      )
+      localStorage.setItem('token', token)
+      localStorage.setItem('user', JSON.stringify(user))
 
-      alert("Connexion réussie")
-
-      navigate('/student/dashboard')
+      if (user.role === 'admin') {
+        navigate('/admin/dashboard')
+      } else {
+        navigate('/student/dashboard')
+      }
 
     } catch (error) {
 
       console.log(error)
 
       if (error.response?.data?.message) {
-
         setError(error.response.data.message)
-
       } else {
-
-        setError("Erreur de connexion")
-
+        setError("Erreur de connexion. Vérifiez vos identifiants.")
       }
 
+    } finally {
+      setLoading(false)
     }
 
   }
@@ -135,11 +130,9 @@ function StudentLogin() {
           {/* ERROR */}
 
           {error && (
-
             <div className="bg-red-100 text-red-500 p-3 rounded-xl mb-5 text-center">
               {error}
             </div>
-
           )}
 
           {/* EMAIL */}
@@ -188,10 +181,11 @@ function StudentLogin() {
 
           <button
             type="submit"
-            className="w-full bg-[#F56B6B] text-white py-4 rounded-[15px] font-bold shadow-md hover:scale-[1.02] duration-200"
+            disabled={loading}
+            className="w-full bg-[#F56B6B] text-white py-4 rounded-[15px] font-bold shadow-md hover:scale-[1.02] duration-200 disabled:opacity-60 disabled:cursor-not-allowed disabled:hover:scale-100"
             style={{ fontFamily: 'Playpen Sans' }}
           >
-            SE CONNECTER
+            {loading ? 'Connexion...' : 'SE CONNECTER'}
           </button>
 
           {/* REGISTER */}

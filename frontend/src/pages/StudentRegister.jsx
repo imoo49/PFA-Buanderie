@@ -87,78 +87,78 @@ function StudentRegister() {
 
       {/* HEADER */}
 
-      <header className="flex justify-between items-start px-10 py-6 relative z-10">
+<header className="flex justify-between items-start px-4 sm:px-10 py-6 relative z-10 gap-3">
 
-        {/* LEFT */}
+  {/* LEFT */}
 
-        <div className="flex items-start gap-3">
+  <div className="flex items-start gap-2 sm:gap-3">
 
-          <img
-            src={logoBuanderie}
-            alt="Buanderie"
-            className="w-28 -mt-5 relative z-20"
-          />
+    <img
+      src={logoBuanderie}
+      alt="Buanderie"
+      className="w-16 sm:w-28 -mt-3 sm:-mt-5 relative z-20"
+    />
 
-          <div className="relative z-20">
+    <div className="relative z-20">
 
-            <h1
-              className="text-[42px] leading-none font-bold text-[#555555]"
-              style={{ fontFamily: 'Playpen Sans' }}
-            >
-              Buanderie
-            </h1>
+      <h1
+        className="text-[26px] sm:text-[42px] leading-none font-bold text-[#555555]"
+        style={{ fontFamily: 'Playpen Sans' }}
+      >
+        Buanderie
+      </h1>
 
-            <h2
-              className="text-[42px] leading-none font-bold text-[#555555] mt-2"
-              style={{ fontFamily: 'Playpen Sans' }}
-            >
-              ENSIAS
-            </h2>
+      <h2
+        className="text-[26px] sm:text-[42px] leading-none font-bold text-[#555555] mt-2"
+        style={{ fontFamily: 'Playpen Sans' }}
+      >
+        ENSIAS
+      </h2>
 
-          </div>
+    </div>
 
-        </div>
+  </div>
 
-        {/* CENTER */}
+  {/* CENTER */}
 
-        <div className="flex items-center gap-10 mt-4 relative z-20">
+  <div className="flex items-center gap-2 sm:gap-10 mt-4 relative z-20">
 
-          <Link
-            to="/"
-            className="text-red-500 text-sm font-semibold"
-          >
-            Accueil
-          </Link>
+    <Link
+      to="/"
+      className="text-red-500 text-sm font-semibold"
+    >
+      Accueil
+    </Link>
 
-          <Link
-            to="/student/login"
-            className="bg-[#FF5C5C] text-white px-8 py-3 rounded-full font-bold shadow-md hover:scale-105 duration-200"
-            style={{ fontFamily: 'Playpen Sans' }}
-          >
-            Se connecter
-          </Link>
+    <Link
+      to="/student/login"
+      className="bg-[#FF5C5C] text-white px-4 sm:px-8 py-2 sm:py-3 rounded-full font-bold shadow-md hover:scale-105 duration-200 text-xs sm:text-base whitespace-nowrap"
+      style={{ fontFamily: 'Playpen Sans' }}
+    >
+      Se connecter
+    </Link>
 
-        </div>
+  </div>
 
-        {/* RIGHT */}
+  {/* RIGHT */}
 
-        <img
-          src={logoEnsias}
-          alt="ENSIAS"
-          className="w-28 relative z-20"
-        />
+  <img
+    src={logoEnsias}
+    alt="ENSIAS"
+    className="w-16 sm:w-28 relative z-20 hidden sm:block"
+  />
 
-      </header>
+</header>
 
       {/* CONTENT */}
 
-      <div className="flex justify-between px-16 mt-12 relative z-10">
+      <div className="flex flex-col lg:flex-row justify-between px-5 sm:px-16 mt-8 sm:mt-12 relative z-10 pb-12">
 
         {/* FORM */}
 
         <form
           onSubmit={handleSubmit}
-          className="w-[560px]"
+          className="w-full lg:w-[560px]"
         >
 
           {/* SUCCÈS */}
@@ -191,7 +191,7 @@ function StudentRegister() {
           <div className="mb-6">
 
             <label
-              className="block text-[24px] text-[#555555] mb-3"
+              className="block text-[20px] sm:text-[24px] text-[#555555] mb-3"
               style={{ fontFamily: 'Playpen Sans' }}
             >
               Nom
@@ -212,7 +212,7 @@ function StudentRegister() {
           <div className="mb-6">
 
             <label
-              className="block text-[24px] text-[#555555] mb-3"
+              className="block text-[20px] sm:text-[24px] text-[#555555] mb-3"
               style={{ fontFamily: 'Playpen Sans' }}
             >
               Prénom
@@ -230,12 +230,12 @@ function StudentRegister() {
 
           {/* EMAIL + PHONE */}
 
-          <div className="flex gap-5 mb-6">
+          <div className="flex flex-col sm:flex-row gap-4 sm:gap-5 mb-6">
 
             <div className="flex-1">
 
               <label
-                className="block text-[24px] text-[#555555] mb-3"
+                className="block text-[20px] sm:text-[24px] text-[#555555] mb-3"
                 style={{ fontFamily: 'Playpen Sans' }}
               >
                 Email
@@ -254,7 +254,7 @@ function StudentRegister() {
             <div className="flex-1">
 
               <label
-                className="block text-[24px] text-[#555555] mb-3"
+                className="block text-[20px] sm:text-[24px] text-[#555555] mb-3"
                 style={{ fontFamily: 'Playpen Sans' }}
               >
                 Numéro de téléphone
@@ -274,14 +274,14 @@ function StudentRegister() {
 
           {/* ROOM + GENDER */}
 
-          <div className="flex gap-5 mb-10">
+          <div className="flex flex-col sm:flex-row gap-4 sm:gap-5 mb-8 sm:mb-10">
 
             {/* ROOM */}
 
             <div className="flex-1">
 
               <label
-                className="block text-[24px] text-[#555555] mb-3"
+                className="block text-[20px] sm:text-[24px] text-[#555555] mb-3"
                 style={{ fontFamily: 'Playpen Sans' }}
               >
                 Numéro de chambre
@@ -302,7 +302,7 @@ function StudentRegister() {
             <div className="flex-1">
 
               <label
-                className="block text-[24px] text-[#555555] mb-3"
+                className="block text-[20px] sm:text-[24px] text-[#555555] mb-3"
                 style={{ fontFamily: 'Playpen Sans' }}
               >
                 Genre
@@ -346,10 +346,10 @@ function StudentRegister() {
 
           {/* PASSWORD */}
 
-          <div className="mb-10">
+          <div className="mb-8 sm:mb-10">
 
             <label
-              className="block text-[24px] text-[#555555] mb-3"
+              className="block text-[20px] sm:text-[24px] text-[#555555] mb-3"
               style={{ fontFamily: 'Playpen Sans' }}
             >
               Mot de passe
@@ -380,10 +380,10 @@ function StudentRegister() {
 
         {/* CONTACT */}
 
-        <div className="mt-24 mr-20 relative z-20">
+        <div className="mt-10 lg:mt-24 lg:mr-20 relative z-20">
 
           <h2
-            className="text-[48px] font-bold text-red-600 mb-10"
+            className="text-[32px] sm:text-[48px] font-bold text-red-600 mb-6 sm:mb-10"
             style={{ fontFamily: 'Playpen Sans' }}
           >
             Contacter nous
@@ -396,7 +396,7 @@ function StudentRegister() {
             </div>
 
             <p
-              className="text-[#555555] text-[22px]"
+              className="text-[#555555] text-[18px] sm:text-[22px]"
               style={{ fontFamily: 'Playpen Sans' }}
             >
               +212 708293615 <br />

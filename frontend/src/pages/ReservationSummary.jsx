@@ -85,22 +85,22 @@ function ReservationSummary() {
 
       {/* HEADER */}
 
-      <header className="flex justify-between items-start px-10 py-6 relative z-10">
+      <header className="flex justify-between items-start px-5 sm:px-10 py-6 relative z-10">
         {/* LEFT */}
 
         <div className="flex items-start gap-3">
-          <img src={logoBuanderie} alt="Buanderie" className="w-24" />
+          <img src={logoBuanderie} alt="Buanderie" className="w-14 sm:w-24" />
 
           <div>
             <h1
-              className="text-[38px] leading-none font-bold text-[#555555]"
+              className="text-[22px] sm:text-[38px] leading-none font-bold text-[#555555]"
               style={{ fontFamily: 'Playpen Sans' }}
             >
               Buanderie
             </h1>
 
             <h2
-              className="text-[38px] leading-none font-bold text-[#555555] mt-2"
+              className="text-[22px] sm:text-[38px] leading-none font-bold text-[#555555] mt-2"
               style={{ fontFamily: 'Playpen Sans' }}
             >
               ENSIAS
@@ -111,13 +111,13 @@ function ReservationSummary() {
 
       {/* CONTENT */}
 
-      <div className="flex justify-center items-center mt-20 relative z-10">
+      <div className="flex justify-center items-start mt-10 sm:mt-20 relative z-10 px-4 pb-8">
         <div
-          className="w-[700px]
+          className="w-full max-w-[700px]
           bg-white
           rounded-[40px]
           shadow-2xl
-          p-14
+          p-8 sm:p-14
           text-center"
         >
           {error ? (
@@ -125,13 +125,13 @@ function ReservationSummary() {
               {/* ICON ERREUR */}
 
               <div className="flex justify-center">
-                <div className="w-28 h-28 rounded-full bg-red-100 flex items-center justify-center">
-                  <span className="text-[55px]">❌</span>
+                <div className="w-20 h-20 sm:w-28 sm:h-28 rounded-full bg-red-100 flex items-center justify-center">
+                  <span className="text-[40px] sm:text-[55px]">❌</span>
                 </div>
               </div>
 
               <h1
-                className="mt-8 text-[42px] font-bold text-[#555555]"
+                className="mt-6 sm:mt-8 text-[28px] sm:text-[42px] font-bold text-[#555555]"
                 style={{ fontFamily: 'Playpen Sans' }}
               >
                 Réservation échouée
@@ -139,10 +139,10 @@ function ReservationSummary() {
 
               <p className="text-red-500 mt-3 text-lg">{error}</p>
 
-              <div className="flex justify-center gap-6 mt-14">
+              <div className="flex justify-center gap-6 mt-10 sm:mt-14">
                 <Link
                   to="/machines"
-                  className="px-8 py-4 rounded-[18px] bg-[#F56B6B] text-white font-bold hover:scale-[1.03] transition"
+                  className="px-6 sm:px-8 py-4 rounded-[18px] bg-[#F56B6B] text-white font-bold hover:scale-[1.03] transition"
                   style={{ fontFamily: 'Playpen Sans' }}
                 >
                   Réessayer
@@ -154,15 +154,15 @@ function ReservationSummary() {
               {/* ICON */}
 
               <div className="flex justify-center">
-                <div className="w-28 h-28 rounded-full bg-green-100 flex items-center justify-center">
-                  <span className="text-[55px]">✅</span>
+                <div className="w-20 h-20 sm:w-28 sm:h-28 rounded-full bg-green-100 flex items-center justify-center">
+                  <span className="text-[40px] sm:text-[55px]">✅</span>
                 </div>
               </div>
 
               {/* TITLE */}
 
               <h1
-                className="mt-8 text-[42px] font-bold text-[#555555]"
+                className="mt-6 sm:mt-8 text-[28px] sm:text-[42px] font-bold text-[#555555]"
                 style={{ fontFamily: 'Playpen Sans' }}
               >
                 Réservation confirmée
@@ -174,8 +174,8 @@ function ReservationSummary() {
 
               {/* DETAILS */}
 
-              <div className="mt-12 space-y-5 text-left">
-                <div className="bg-[#FFF5F5] rounded-[18px] p-5 flex justify-between">
+              <div className="mt-8 sm:mt-12 space-y-5 text-left">
+                <div className="bg-[#FFF5F5] rounded-[18px] p-4 sm:p-5 flex justify-between">
                   <span className="font-bold text-[#555555]">Machine</span>
 
                   <span className="text-[#F56B6B] font-bold">
@@ -183,7 +183,7 @@ function ReservationSummary() {
                   </span>
                 </div>
 
-                <div className="bg-[#FFF5F5] rounded-[18px] p-5 flex justify-between">
+                <div className="bg-[#FFF5F5] rounded-[18px] p-4 sm:p-5 flex justify-between">
                   <span className="font-bold text-[#555555]">Date</span>
 
                   <span className="text-[#555555] font-bold">
@@ -191,7 +191,7 @@ function ReservationSummary() {
                   </span>
                 </div>
 
-                <div className="bg-[#FFF5F5] rounded-[18px] p-5 flex justify-between">
+                <div className="bg-[#FFF5F5] rounded-[18px] p-4 sm:p-5 flex justify-between">
                   <span className="font-bold text-[#555555]">Créneau</span>
 
                   <span className="text-[#555555] font-bold">
@@ -203,10 +203,10 @@ function ReservationSummary() {
 
               {/* BUTTONS */}
 
-              <div className="flex justify-center gap-6 mt-14">
+              <div className="flex flex-col sm:flex-row justify-center gap-4 sm:gap-6 mt-10 sm:mt-14">
                 <Link
                   to="/student/dashboard"
-                  className="px-8 py-4 rounded-[18px] bg-white border-2 border-[#F56B6B] text-[#F56B6B] font-bold hover:scale-[1.03] transition"
+                  className="px-6 sm:px-8 py-4 rounded-[18px] bg-white border-2 border-[#F56B6B] text-[#F56B6B] font-bold hover:scale-[1.03] transition"
                   style={{ fontFamily: 'Playpen Sans' }}
                 >
                   Tableau de bord
@@ -214,7 +214,7 @@ function ReservationSummary() {
 
                 <Link
                   to="/machines"
-                  className="px-8 py-4 rounded-[18px] bg-[#F56B6B] text-white font-bold hover:scale-[1.03] transition"
+                  className="px-6 sm:px-8 py-4 rounded-[18px] bg-[#F56B6B] text-white font-bold hover:scale-[1.03] transition"
                   style={{ fontFamily: 'Playpen Sans' }}
                 >
                   Nouvelle réservation

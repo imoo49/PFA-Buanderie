@@ -7,28 +7,28 @@ import adminIcon from '../assets/admin-icon.png'
 
 function LandingPage() {
   return (
-    <div className="min-h-screen bg-[#F5F5F5] px-10 py-6">
+    <div className="min-h-screen bg-[#F5F5F5] px-5 sm:px-10 py-6">
 
       {/* HEADER */}
       <div className="flex justify-between items-start">
 
-        <div className="flex items-start gap-3 -mt-4">
+        <div className="flex items-start gap-3 -mt-2 sm:-mt-4">
           <img
             src={logoBuanderie}
             alt="Buanderie"
-            className="w-28 -mt-3"
+            className="w-16 sm:w-28 -mt-1 sm:-mt-3"
           />
 
           <div>
             <h1
-              className="text-[42px] leading-none font-bold text-[#555555]"
+              className="text-[24px] sm:text-[42px] leading-none font-bold text-[#555555]"
               style={{ fontFamily: 'Playpen Sans' }}
             >
               Buanderie
             </h1>
 
             <h2
-              className="text-[42px] leading-none font-bold text-[#555555] mt-2"
+              className="text-[24px] sm:text-[42px] leading-none font-bold text-[#555555] mt-2"
               style={{ fontFamily: 'Playpen Sans' }}
             >
               ENSIAS
@@ -39,30 +39,30 @@ function LandingPage() {
         <img
           src={logoEnsias}
           alt="ENSIAS"
-          className="w-28"
+          className="w-16 sm:w-28"
         />
       </div>
 
       {/* CARDS */}
-      <div className="flex justify-center gap-40 mt-20">
+      <div className="flex flex-col sm:flex-row justify-center items-center gap-10 sm:gap-40 mt-12 sm:mt-20">
 
         {/* STUDENT */}
         <Link to="/student/register">
 
           <div className="flex flex-col items-center cursor-pointer">
 
-            <div className="w-[220px] h-[220px] bg-[#EDEDED] rounded-[40px] flex items-center justify-center">
+            <div className="w-[170px] h-[170px] sm:w-[220px] sm:h-[220px] bg-[#EDEDED] rounded-[40px] flex items-center justify-center">
 
               <img
                 src={studentIcon}
                 alt="Student"
-                className="w-32"
+                className="w-24 sm:w-32"
               />
 
             </div>
 
             <h2
-              className="text-[42px] font-bold text-[#555555] mt-6"
+              className="text-[26px] sm:text-[42px] font-bold text-[#555555] mt-4 sm:mt-6"
               style={{ fontFamily: 'Playpen Sans' }}
             >
               Espace étudiant
@@ -77,18 +77,18 @@ function LandingPage() {
 
           <div className="flex flex-col items-center cursor-pointer">
 
-            <div className="w-[220px] h-[220px] bg-[#EDEDED] rounded-[40px] flex items-center justify-center">
+            <div className="w-[170px] h-[170px] sm:w-[220px] sm:h-[220px] bg-[#EDEDED] rounded-[40px] flex items-center justify-center">
 
               <img
                 src={adminIcon}
                 alt="Admin"
-                className="w-32"
+                className="w-24 sm:w-32"
               />
 
             </div>
 
             <h2
-              className="text-[42px] font-bold text-[#555555] mt-6"
+              className="text-[26px] sm:text-[42px] font-bold text-[#555555] mt-4 sm:mt-6"
               style={{ fontFamily: 'Playpen Sans' }}
             >
               Espace admin

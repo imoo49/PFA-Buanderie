@@ -61,40 +61,65 @@ class AuthController extends Controller
     }
 
     public function login(Request $request)
-    {
-        $request->validate([
-            'email' => 'required|email',
-            'password' => 'required',
-        ]);
+{
+    $request->validate([
+        'email' => 'required|email',
+        'password' => 'required',
+    ]);
 
-        if (!Auth::attempt($request->only('email', 'password'))) {
+    // =========================
+    // LOGIN ADMIN FIXE
+    // =========================
 
-            return response()->json([
-                'message' => 'Identifiants invalides'
-            ], 401);
-
-        }
-
-        $user = User::where('email', $request->email)->first();
-
-        // Bloquer si email non vérifié ← AJOUTÉ
-        if (!$user->hasVerifiedEmail()) {
-            return response()->json([
-                'message' => 'Veuillez vérifier votre adresse email avant de vous connecter.'
-            ], 403);
-        }
-
-        // Supprimer anciens tokens
-        $user->tokens()->delete();
-
-        $token = $user->createToken('auth_token')->plainTextToken;
+    if (
+        $request->email === 'admin@ensias.ma' &&
+        $request->password === 'admin123'
+    ) {
 
         return response()->json([
-            'message' => 'Connexion réussie',
-            'user' => $user,
-            'token' => $token
+            'message' => 'Connexion admin réussie',
+            'token' => 'admin-token',
+            'user' => [
+                'name' => 'Admin',
+                'prenom' => 'ENSIAS',
+                'email' => 'admin@ensias.ma',
+                'role' => 'admin'
+            ]
         ], 200);
     }
+
+    // =========================
+    // LOGIN ETUDIANT NORMAL
+    // =========================
+
+    if (!Auth::attempt($request->only('email', 'password'))) {
+
+        return response()->json([
+            'message' => 'Identifiants invalides'
+        ], 401);
+    }
+
+    $user = User::where('email', $request->email)->first();
+
+    // Vérification email
+    if (!$user->hasVerifiedEmail()) {
+
+        return response()->json([
+            'message' => 'Veuillez vérifier votre adresse email avant de vous connecter.'
+        ], 403);
+    }
+
+    // Supprimer anciens tokens
+    $user->tokens()->delete();
+
+    $token = $user->createToken('auth_token')->plainTextToken;
+
+    return response()->json([
+        'message' => 'Connexion réussie',
+        'user' => $user,
+        'token' => $token
+    ], 200);
+}
 
     public function logout(Request $request)
     {

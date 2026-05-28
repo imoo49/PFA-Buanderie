@@ -1,6 +1,7 @@
-import  {useState, useEffect} from 'react'
+import { useState, useEffect } from 'react'
 import { Link } from 'react-router-dom'
 import api from '../api/api'
+
 import logoBuanderie from '../assets/logo-buanderie.png'
 import logoEnsias from '../assets/logo-ensias.png'
 
@@ -8,35 +9,44 @@ import washingMachine from '../assets/washing-machine.png'
 import dryerMachine from '../assets/dryer.png'
 import profil from '../assets/profil.png'
 import notificationIcon from '../assets/notification-icon.png'
+
 function MachinesPage() {
+
   const [machines, setMachines] = useState([])
+
+  const [showProfileMenu, setShowProfileMenu] = useState(false)
+
+  const [showNotifications, setShowNotifications] = useState(false)
+
   const fetchMachines = async () => {
-  try {
 
-    const response = await api.get('/machines')
+    try {
 
-    setMachines(response.data)
+      const response = await api.get('/machines')
 
-  } catch (error) {
+      setMachines(response.data)
 
-    console.error(error)
+    } catch (error) {
+
+      console.error(error)
+
+    }
 
   }
-}
-useEffect(() => {
 
-  fetchMachines()
+  useEffect(() => {
 
-}, [])
-const laveLinge = machines.filter(
-  machine => machine.type === 'lave-linge'
-)
+    fetchMachines()
 
-const secheLinge = machines.filter(
-  machine => machine.type === 'seche-linge'
-)
-  const [showProfileMenu, setShowProfileMenu] = useState(false)
-  const [showNotifications, setShowNotifications] = useState(false)
+  }, [])
+
+  const laveLinge = machines.filter(
+    machine => machine.type === 'lave-linge'
+  )
+
+  const secheLinge = machines.filter(
+    machine => machine.type === 'seche-linge'
+  )
 
   return (
 
@@ -44,35 +54,35 @@ const secheLinge = machines.filter(
 
       {/* BACKGROUND */}
 
-      <div className="absolute top-[-200px] left-[-120px] w-[500px] h-[500px] bg-[#FADDDD] rounded-full opacity-60"></div>
+      <div className="absolute top-[-200px] left-[-120px] w-[400px] sm:w-[500px] h-[400px] sm:h-[500px] bg-[#FADDDD] rounded-full opacity-60"></div>
 
-      <div className="absolute bottom-[-250px] right-[-150px] w-[700px] h-[700px] bg-[#FADDDD] rounded-full opacity-60"></div>
+      <div className="absolute bottom-[-250px] right-[-150px] w-[500px] sm:w-[700px] h-[500px] sm:h-[700px] bg-[#FADDDD] rounded-full opacity-60"></div>
 
       {/* HEADER */}
 
-      <header className="flex justify-between items-start px-10 py-6 relative z-10">
+      <header className="flex justify-between items-start px-5 sm:px-10 py-5 sm:py-6 relative z-10">
 
         {/* LEFT */}
 
-        <div className="flex items-start gap-3">
+        <div className="flex items-start gap-2 sm:gap-3">
 
           <img
             src={logoBuanderie}
             alt="Buanderie"
-            className="w-24"
+            className="w-14 sm:w-24"
           />
 
           <div>
 
             <h1
-              className="text-[38px] leading-none font-bold text-[#555555]"
+              className="text-xl sm:text-[38px] leading-none font-bold text-[#555555]"
               style={{ fontFamily: 'Playpen Sans' }}
             >
               Buanderie
             </h1>
 
             <h2
-              className="text-[38px] leading-none font-bold text-[#555555] mt-2"
+              className="text-xl sm:text-[38px] leading-none font-bold text-[#555555] mt-1 sm:mt-2"
               style={{ fontFamily: 'Playpen Sans' }}
             >
               ENSIAS
@@ -84,21 +94,23 @@ const secheLinge = machines.filter(
 
         {/* RIGHT */}
 
-        <div className="flex items-center gap-5 relative">
+        <div className="flex items-center gap-3 sm:gap-5 relative">
+
+          {/* NOTIFICATIONS */}
 
           <button
-  onClick={() =>
-    setShowNotifications(!showNotifications)
-  }
->
+            onClick={() =>
+              setShowNotifications(!showNotifications)
+            }
+          >
 
-  <img
-    src={notificationIcon}
-    alt="Notifications"
-    className="w-10 h-10 hover:scale-110 transition"
-  />
+            <img
+              src={notificationIcon}
+              alt="Notifications"
+              className="w-8 h-8 sm:w-10 sm:h-10 hover:scale-110 transition"
+            />
 
-</button>
+          </button>
 
           {/* PROFILE */}
 
@@ -114,11 +126,11 @@ const secheLinge = machines.filter(
               <img
                 src={profil}
                 alt="Profil"
-                className="w-10 h-10 rounded-full"
+                className="w-8 h-8 sm:w-10 sm:h-10 rounded-full"
               />
 
               <span
-                className="text-[#555555]"
+                className="text-[#555555] text-xs sm:text-sm"
                 style={{ fontFamily: 'Playpen Sans' }}
               >
                 Profil
@@ -128,7 +140,7 @@ const secheLinge = machines.filter(
 
             {showProfileMenu && (
 
-              <div className="absolute right-0 mt-4 w-[250px] bg-white rounded-[20px] shadow-lg p-4 z-50">
+              <div className="absolute right-0 mt-4 w-[200px] sm:w-[250px] bg-white rounded-[20px] shadow-lg p-4 z-50">
 
                 <button className="w-full text-left px-4 py-3 hover:bg-[#F5F5F5] rounded-xl transition">
 
@@ -166,71 +178,125 @@ const secheLinge = machines.filter(
 
       {/* TITLE */}
 
-      <div className="text-center mt-6 relative z-10">
+      <div className="text-center mt-4 sm:mt-6 relative z-10 px-4">
 
         <h1
-          className="text-[48px] text-[#555555] font-bold"
+          className="text-2xl sm:text-[48px] text-[#555555] font-bold"
           style={{ fontFamily: 'Playpen Sans' }}
         >
           Choisissez une machine
         </h1>
 
-        <p className="text-gray-500 mt-2 text-lg">
+        <p className="text-gray-500 mt-2 text-sm sm:text-lg">
           Sélectionnez le type de machine à utiliser
         </p>
 
       </div>
 
-      <div className="flex justify-center gap-28 mt-24 relative z-10">
+      {/* MACHINE CARDS */}
 
-  {/* MACHINE A LAVER */}
-  <Link to="/calendar">
-    <div
-      onClick={() => localStorage.setItem('selectedMachine', 'lave-linge')}
-      className="w-[350px] h-[420px]
-      bg-gradient-to-b from-[#FFF5F5] to-[#FADDDD]
-      rounded-[40px]
-      shadow-xl
-      flex flex-col items-center justify-center
-      cursor-pointer
-      transition duration-300
-      hover:scale-[1.04]
-      hover:shadow-2xl"
-    >
-      <img src={washingMachine} className="w-[230px] h-[230px]" />
+      <div className="flex flex-col sm:flex-row justify-center items-center gap-8 sm:gap-16 mt-12 sm:mt-24 px-5 relative z-10 pb-10">
 
-      <h2 className="mt-10 text-[36px] font-bold text-[#555555]">
-        MACHINE À LAVER ({laveLinge.length})
-      </h2>
+        {/* MACHINE A LAVER */}
+
+        <Link to="/calendar" className="w-full sm:w-auto">
+
+          <div
+            onClick={() =>
+              localStorage.setItem('selectedMachine', 'lave-linge')
+            }
+            className="
+            w-full sm:w-[300px] lg:w-[350px]
+            h-[200px] sm:h-[360px] lg:h-[420px]
+            bg-gradient-to-b from-[#FFF5F5] to-[#FADDDD]
+            rounded-[25px] sm:rounded-[40px]
+            shadow-xl
+            flex flex-row sm:flex-col items-center justify-center
+            cursor-pointer
+            transition duration-300
+            hover:scale-[1.03]
+            hover:shadow-2xl
+            gap-6 sm:gap-0
+            px-6 sm:px-0"
+          >
+
+            <img
+              src={washingMachine}
+              className="
+              w-28 h-28
+              sm:w-[180px] lg:w-[230px]
+              sm:h-[180px] lg:h-[230px]"
+              alt="Lave-linge"
+            />
+
+            <h2
+              className="
+              text-lg sm:text-2xl lg:text-[28px]
+              font-bold
+              text-[#555555]
+              sm:mt-6
+              text-center"
+            >
+              MACHINE À LAVER
+            </h2>
+
+          </div>
+
+        </Link>
+
+        {/* SECHE LINGE */}
+
+        <Link to="/calendar" className="w-full sm:w-auto">
+
+          <div
+            onClick={() =>
+              localStorage.setItem('selectedMachine', 'seche-linge')
+            }
+            className="
+            w-full sm:w-[300px] lg:w-[350px]
+            h-[200px] sm:h-[360px] lg:h-[420px]
+            bg-gradient-to-b from-[#FFF5F5] to-[#FADDDD]
+            rounded-[25px] sm:rounded-[40px]
+            shadow-xl
+            flex flex-row sm:flex-col items-center justify-center
+            cursor-pointer
+            transition duration-300
+            hover:scale-[1.03]
+            hover:shadow-2xl
+            gap-6 sm:gap-0
+            px-6 sm:px-0"
+          >
+
+            <img
+              src={dryerMachine}
+              className="
+              w-28 h-28
+              sm:w-[180px] lg:w-[230px]
+              sm:h-[180px] lg:h-[230px]"
+              alt="Sèche-linge"
+            />
+
+            <h2
+              className="
+              text-lg sm:text-2xl lg:text-[28px]
+              font-bold
+              text-[#555555]
+              sm:mt-6
+              text-center"
+            >
+              SÈCHE LINGE
+            </h2>
+
+          </div>
+
+        </Link>
+
+      </div>
+
     </div>
-  </Link>
 
-  {/* SECHE LINGE */}
-  <Link to="/calendar">
-    <div
-      onClick={() => localStorage.setItem('selectedMachine', 'seche-linge')}
-      className="w-[350px] h-[420px]
-      bg-gradient-to-b from-[#FFF5F5] to-[#FADDDD]
-      rounded-[40px]
-      shadow-xl
-      flex flex-col items-center justify-center
-      cursor-pointer
-      transition duration-300
-      hover:scale-[1.04]
-      hover:shadow-2xl"
-    >
-      <img src={dryerMachine} className="w-[230px] h-[230px]" />
-
-      <h2 className="mt-10 text-[36px] font-bold text-[#555555]">
-        SÈCHE LINGE ({secheLinge.length})
-      </h2>
-    </div>
-  </Link>
-
- </div>
-
-    </div>
   )
+
 }
 
 export default MachinesPage

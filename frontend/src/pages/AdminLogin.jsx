@@ -75,27 +75,27 @@ function AdminLogin() {
 
       {/* HEADER */}
 
-      <header className="flex justify-between items-start px-10 py-6 relative z-10">
+      <header className="flex justify-between items-start px-5 sm:px-10 py-6 relative z-10">
 
         <div className="flex items-start gap-3">
 
           <img
             src={logoBuanderie}
             alt="Buanderie"
-            className="w-28 -mt-5"
+            className="w-16 sm:w-28 -mt-3 sm:-mt-5"
           />
 
           <div>
 
             <h1
-              className="text-[42px] leading-none font-bold text-[#555555]"
+              className="text-[26px] sm:text-[42px] leading-none font-bold text-[#555555]"
               style={{ fontFamily: 'Playpen Sans' }}
             >
               Buanderie
             </h1>
 
             <h2
-              className="text-[42px] leading-none font-bold text-[#555555] mt-2"
+              className="text-[26px] sm:text-[42px] leading-none font-bold text-[#555555] mt-2"
               style={{ fontFamily: 'Playpen Sans' }}
             >
               ENSIAS
@@ -116,22 +116,22 @@ function AdminLogin() {
         <img
           src={logoEnsias}
           alt="ENSIAS"
-          className="w-28"
+          className="w-16 sm:w-28"
         />
 
       </header>
 
       {/* LOGIN CARD */}
 
-      <div className="flex justify-center items-center mt-20 relative z-10">
+      <div className="flex justify-center items-center mt-10 sm:mt-20 relative z-10 px-4">
 
         <form
           onSubmit={handleSubmit}
-          className="bg-white w-[500px] p-10 rounded-[30px] shadow-lg"
+          className="bg-white w-full max-w-[500px] p-6 sm:p-10 rounded-[30px] shadow-lg"
         >
 
           <h1
-            className="text-[42px] text-center text-[#555555] mb-10 font-bold"
+            className="text-[32px] sm:text-[42px] text-center text-[#555555] mb-8 sm:mb-10 font-bold"
             style={{ fontFamily: 'Playpen Sans' }}
           >
             Connexion Admin
@@ -150,7 +150,7 @@ function AdminLogin() {
           <div className="mb-6">
 
             <label
-              className="block text-[24px] text-[#555555] mb-3"
+              className="block text-[20px] sm:text-[24px] text-[#555555] mb-3"
               style={{ fontFamily: 'Playpen Sans' }}
             >
               Email Admin
@@ -168,10 +168,10 @@ function AdminLogin() {
 
           {/* PASSWORD */}
 
-          <div className="mb-10">
+          <div className="mb-8 sm:mb-10">
 
             <label
-              className="block text-[24px] text-[#555555] mb-3"
+              className="block text-[20px] sm:text-[24px] text-[#555555] mb-3"
               style={{ fontFamily: 'Playpen Sans' }}
             >
               Mot de passe

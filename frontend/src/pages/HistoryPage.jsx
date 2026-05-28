@@ -60,20 +60,20 @@ function HistoryPage() {
 
       {/* HEADER */}
 
-      <header className="flex justify-between items-start px-10 py-6 relative z-10">
+      <header className="flex justify-between items-start px-5 sm:px-10 py-6 relative z-10">
         <div className="flex items-start gap-3">
-          <img src={logoBuanderie} alt="Buanderie" className="w-24" />
+          <img src={logoBuanderie} alt="Buanderie" className="w-14 sm:w-24" />
 
           <div>
             <h1
-              className="text-[38px] leading-none font-bold text-[#555555]"
+              className="text-[22px] sm:text-[38px] leading-none font-bold text-[#555555]"
               style={{ fontFamily: 'Playpen Sans' }}
             >
               Buanderie
             </h1>
 
             <h2
-              className="text-[38px] leading-none font-bold text-[#555555] mt-2"
+              className="text-[22px] sm:text-[38px] leading-none font-bold text-[#555555] mt-2"
               style={{ fontFamily: 'Playpen Sans' }}
             >
               ENSIAS
@@ -84,9 +84,9 @@ function HistoryPage() {
 
       {/* TITLE */}
 
-      <div className="text-center mt-8 relative z-10">
+      <div className="text-center mt-4 sm:mt-8 relative z-10 px-4">
         <h1
-          className="text-[48px] font-bold text-[#555555]"
+          className="text-[30px] sm:text-[48px] font-bold text-[#555555]"
           style={{ fontFamily: 'Playpen Sans' }}
         >
           Historique
@@ -97,17 +97,17 @@ function HistoryPage() {
 
       {/* HISTORY */}
 
-      <div className="w-[900px] mx-auto mt-14 relative z-10">
+      <div className="w-full max-w-[900px] mx-auto mt-8 sm:mt-14 relative z-10 px-4">
         <div className="space-y-6">
           {reservations.length > 0 ? (
             reservations.map((reservation, index) => (
               <div
                 key={index}
-                className="bg-white rounded-[25px] shadow-lg p-8 flex justify-between items-center"
+                className="bg-white rounded-[25px] shadow-lg p-5 sm:p-8 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4"
               >
                 <div>
                   <h2
-                    className="text-[28px] font-bold text-[#555555]"
+                    className="text-[20px] sm:text-[28px] font-bold text-[#555555]"
                     style={{ fontFamily: 'Playpen Sans' }}
                   >
                     {reservation.machine?.type} — {reservation.machine?.numero}
@@ -123,11 +123,12 @@ function HistoryPage() {
 
                 <div
                   className={`
-                    px-6
-                    py-3
+                    px-4 sm:px-6
+                    py-2 sm:py-3
                     rounded-[15px]
                     font-bold
                     text-white
+                    shrink-0
 
                     ${
                       reservation.statut === 'termine'
@@ -155,7 +156,7 @@ function HistoryPage() {
 
         {/* BUTTON */}
 
-        <div className="flex justify-center mt-14">
+        <div className="flex justify-center mt-10 sm:mt-14 pb-8">
           <Link
             to="/student/dashboard"
             className="
@@ -164,7 +165,7 @@ function HistoryPage() {
             px-10
             py-4
             rounded-[18px]
-            text-[22px]
+            text-[18px] sm:text-[22px]
             font-bold
             hover:scale-[1.03]
             transition

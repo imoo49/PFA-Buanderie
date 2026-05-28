@@ -97,22 +97,22 @@ function SlotsPage() {
 
       {/* HEADER */}
 
-      <header className="flex justify-between items-start px-10 py-6 relative z-10">
+      <header className="flex justify-between items-start px-5 sm:px-10 py-6 relative z-10">
         {/* LEFT */}
 
         <div className="flex items-start gap-3">
-          <img src={logoBuanderie} alt="Buanderie" className="w-24" />
+          <img src={logoBuanderie} alt="Buanderie" className="w-14 sm:w-24" />
 
           <div>
             <h1
-              className="text-[38px] leading-none font-bold text-[#555555]"
+              className="text-[22px] sm:text-[38px] leading-none font-bold text-[#555555]"
               style={{ fontFamily: 'Playpen Sans' }}
             >
               Buanderie
             </h1>
 
             <h2
-              className="text-[38px] leading-none font-bold text-[#555555] mt-2"
+              className="text-[22px] sm:text-[38px] leading-none font-bold text-[#555555] mt-2"
               style={{ fontFamily: 'Playpen Sans' }}
             >
               ENSIAS
@@ -129,7 +129,7 @@ function SlotsPage() {
             <img
               src={notificationIcon}
               alt="Notifications"
-              className="w-10 h-10 hover:scale-110 transition"
+              className="w-8 h-8 sm:w-10 sm:h-10 hover:scale-110 transition"
             />
           </button>
 
@@ -140,10 +140,10 @@ function SlotsPage() {
               onClick={() => setShowProfileMenu(!showProfileMenu)}
               className="flex flex-col items-center"
             >
-              <img src={profil} alt="Profil" className="w-10 h-10 rounded-full" />
+              <img src={profil} alt="Profil" className="w-8 h-8 sm:w-10 sm:h-10 rounded-full" />
 
               <span
-                className="text-[#555555]"
+                className="text-[#555555] text-sm"
                 style={{ fontFamily: 'Playpen Sans' }}
               >
                 Profil
@@ -151,7 +151,7 @@ function SlotsPage() {
             </button>
 
             {showProfileMenu && (
-              <div className="absolute right-0 mt-4 w-[250px] bg-white rounded-[20px] shadow-lg p-4 z-50">
+              <div className="absolute right-0 mt-4 w-[200px] sm:w-[250px] bg-white rounded-[20px] shadow-lg p-4 z-50">
                 <Link
                   to="/history"
                   className="block w-full px-4 py-3 hover:bg-[#F5F5F5] rounded-xl transition"
@@ -183,9 +183,9 @@ function SlotsPage() {
 
       {/* TITLE */}
 
-      <div className="text-center mt-8 relative z-10">
+      <div className="text-center mt-4 sm:mt-8 relative z-10 px-4">
         <h1
-          className="text-[48px] font-bold text-[#555555]"
+          className="text-[30px] sm:text-[48px] font-bold text-[#555555]"
           style={{ fontFamily: 'Playpen Sans' }}
         >
           Créneaux disponibles
@@ -196,7 +196,7 @@ function SlotsPage() {
 
       {/* SLOTS */}
 
-      <div className="flex justify-center mt-16 relative z-10">
+      <div className="flex justify-center mt-10 sm:mt-16 relative z-10 px-4">
         {slots.length === 0 ? (
           <div className="bg-white p-10 rounded-[25px] text-center shadow-lg">
             <h2 className="text-2xl text-gray-500 font-bold">
@@ -204,15 +204,15 @@ function SlotsPage() {
             </h2>
           </div>
         ) : (
-          <div className="grid grid-cols-4 gap-8">
+          <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 sm:gap-8">
             {slots.map((slot, index) => (
               <button
                 key={index}
                 disabled={slot.status !== 'free'}
                 onClick={() => handleSelectSlot(slot)}
                 className={`
-                  w-[180px]
-                  h-[120px]
+                  w-[140px] h-[100px]
+                  sm:w-[180px] sm:h-[120px]
                   rounded-[25px]
                   shadow-lg
                   font-bold
@@ -234,7 +234,7 @@ function SlotsPage() {
                 `}
                 style={{ fontFamily: 'Playpen Sans' }}
               >
-                <span className="text-[24px]">{slot.hour}</span>
+                <span className="text-[18px] sm:text-[24px]">{slot.hour}</span>
 
                 <span className="text-sm mt-2">
                   {slot.status === 'free'
@@ -251,7 +251,7 @@ function SlotsPage() {
 
       {/* LEGEND */}
 
-      <div className="flex justify-center gap-10 mt-14 relative z-10">
+      <div className="flex justify-center gap-6 sm:gap-10 mt-10 sm:mt-14 relative z-10 flex-wrap px-4">
         <div className="flex items-center gap-3">
           <div className="w-5 h-5 rounded-full bg-white border"></div>
 
@@ -273,17 +273,19 @@ function SlotsPage() {
 
       {/* BUTTON */}
 
-      <div className="flex justify-center mt-16 relative z-10">
+      <div className="flex justify-center mt-10 sm:mt-16 relative z-10 pb-8 px-4">
         <Link
           to="/reservation-summary"
           className={`
-            px-12
+            px-8 sm:px-12
             py-4
             rounded-[18px]
-            text-[22px]
+            text-[18px] sm:text-[22px]
             font-bold
             shadow-lg
             transition
+            w-full sm:w-auto
+            text-center
 
             ${
               selectedSlot

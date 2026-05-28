@@ -51,20 +51,20 @@ function PersonalDataPage() {
 
       {/* HEADER */}
 
-      <header className="flex justify-between items-start px-10 py-6 relative z-10">
+      <header className="flex justify-between items-start px-5 sm:px-10 py-6 relative z-10">
         <div className="flex items-start gap-3">
-          <img src={logoBuanderie} alt="Buanderie" className="w-24" />
+          <img src={logoBuanderie} alt="Buanderie" className="w-14 sm:w-24" />
 
           <div>
             <h1
-              className="text-[38px] leading-none font-bold text-[#555555]"
+              className="text-[22px] sm:text-[38px] leading-none font-bold text-[#555555]"
               style={{ fontFamily: 'Playpen Sans' }}
             >
               Buanderie
             </h1>
 
             <h2
-              className="text-[38px] leading-none font-bold text-[#555555] mt-2"
+              className="text-[22px] sm:text-[38px] leading-none font-bold text-[#555555] mt-2"
               style={{ fontFamily: 'Playpen Sans' }}
             >
               ENSIAS
@@ -75,9 +75,9 @@ function PersonalDataPage() {
 
       {/* TITLE */}
 
-      <div className="text-center mt-8 relative z-10">
+      <div className="text-center mt-4 sm:mt-8 relative z-10 px-4">
         <h1
-          className="text-[48px] font-bold text-[#555555]"
+          className="text-[28px] sm:text-[48px] font-bold text-[#555555]"
           style={{ fontFamily: 'Playpen Sans' }}
         >
           Données personnelles
@@ -88,15 +88,15 @@ function PersonalDataPage() {
 
       {/* CARD */}
 
-      <div className="w-[850px] mx-auto mt-16 relative z-10">
-        <div className="bg-white rounded-[35px] shadow-xl p-12">
-          <div className="space-y-8">
+      <div className="w-full max-w-[850px] mx-auto mt-8 sm:mt-16 relative z-10 px-4 pb-8">
+        <div className="bg-white rounded-[35px] shadow-xl p-6 sm:p-12">
+          <div className="space-y-6 sm:space-y-8">
             {/* NOM COMPLET */}
 
             <div>
               <label className="block text-gray-500 mb-2 text-lg">Nom complet</label>
 
-              <div className="bg-[#FFF5F5] p-5 rounded-[18px] text-[#555555] text-xl font-bold">
+              <div className="bg-[#FFF5F5] p-4 sm:p-5 rounded-[18px] text-[#555555] text-lg sm:text-xl font-bold">
                 {student?.name && student?.prenom
                   ? `${student.name} ${student.prenom}`
                   : 'Nom indisponible'}
@@ -108,7 +108,7 @@ function PersonalDataPage() {
             <div>
               <label className="block text-gray-500 mb-2 text-lg">Email</label>
 
-              <div className="bg-[#FFF5F5] p-5 rounded-[18px] text-[#555555] text-xl font-bold">
+              <div className="bg-[#FFF5F5] p-4 sm:p-5 rounded-[18px] text-[#555555] text-lg sm:text-xl font-bold break-all">
                 {student?.email || 'Email indisponible'}
               </div>
             </div>
@@ -118,7 +118,7 @@ function PersonalDataPage() {
             <div>
               <label className="block text-gray-500 mb-2 text-lg">Téléphone</label>
 
-              <div className="bg-[#FFF5F5] p-5 rounded-[18px] text-[#555555] text-xl font-bold">
+              <div className="bg-[#FFF5F5] p-4 sm:p-5 rounded-[18px] text-[#555555] text-lg sm:text-xl font-bold">
                 {student?.telephone || 'Non renseigné'}
               </div>
             </div>
@@ -130,7 +130,7 @@ function PersonalDataPage() {
                 Numéro de chambre
               </label>
 
-              <div className="bg-[#FFF5F5] p-5 rounded-[18px] text-[#555555] text-xl font-bold">
+              <div className="bg-[#FFF5F5] p-4 sm:p-5 rounded-[18px] text-[#555555] text-lg sm:text-xl font-bold">
                 {student?.numChambre || 'Non renseigné'}
               </div>
             </div>
@@ -140,7 +140,7 @@ function PersonalDataPage() {
             <div>
               <label className="block text-gray-500 mb-2 text-lg">Genre</label>
 
-              <div className="bg-[#FFF5F5] p-5 rounded-[18px] text-[#555555] text-xl font-bold">
+              <div className="bg-[#FFF5F5] p-4 sm:p-5 rounded-[18px] text-[#555555] text-lg sm:text-xl font-bold">
                 {student?.genre || 'Non renseigné'}
               </div>
             </div>
@@ -148,7 +148,7 @@ function PersonalDataPage() {
 
           {/* BUTTON */}
 
-          <div className="flex justify-center mt-14">
+          <div className="flex justify-center mt-10 sm:mt-14">
             <Link
               to="/student/dashboard"
               className="bg-[#F56B6B]
@@ -156,7 +156,7 @@ function PersonalDataPage() {
               px-10
               py-4
               rounded-[18px]
-              text-[22px]
+              text-[18px] sm:text-[22px]
               font-bold
               hover:scale-[1.03]
               transition"

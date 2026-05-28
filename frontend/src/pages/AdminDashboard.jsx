@@ -77,25 +77,25 @@ function AdminDashboard() {
   }
 
   return (
-    <div className="min-h-screen bg-[#F5F5F5] p-6">
+    <div className="min-h-screen bg-[#F5F5F5] p-4 sm:p-6">
       {/* HEADER */}
 
       <header className="flex justify-between items-start">
         {/* LEFT */}
 
         <div className="flex items-start gap-3">
-          <img src={logoBuanderie} alt="Buanderie" className="w-24" />
+          <img src={logoBuanderie} alt="Buanderie" className="w-14 sm:w-24" />
 
           <div>
             <h1
-              className="text-[38px] leading-none font-bold text-[#555555]"
+              className="text-[22px] sm:text-[38px] leading-none font-bold text-[#555555]"
               style={{ fontFamily: 'Playpen Sans' }}
             >
               Buanderie
             </h1>
 
             <h2
-              className="text-[38px] leading-none font-bold text-[#555555] mt-2"
+              className="text-[22px] sm:text-[38px] leading-none font-bold text-[#555555] mt-2"
               style={{ fontFamily: 'Playpen Sans' }}
             >
               ENSIAS
@@ -103,10 +103,10 @@ function AdminDashboard() {
           </div>
         </div>
 
-        {/* CENTER */}
+        {/* CENTER — caché sur mobile */}
 
         <h1
-          className="text-[45px] text-[#555555] font-bold mt-2"
+          className="hidden md:block text-[28px] lg:text-[45px] text-[#555555] font-bold mt-2"
           style={{ fontFamily: 'Playpen Sans' }}
         >
           Dashboard Admin
@@ -114,8 +114,8 @@ function AdminDashboard() {
 
         {/* RIGHT */}
 
-        <div className="flex items-center gap-6 relative">
-          <img src={logoEnsias} alt="ENSIAS" className="w-24" />
+        <div className="flex items-center gap-3 sm:gap-6 relative">
+          <img src={logoEnsias} alt="ENSIAS" className="w-14 sm:w-24 hidden sm:block" />
 
           <div className="relative">
             <button
@@ -125,11 +125,11 @@ function AdminDashboard() {
               <img
                 src={profil}
                 alt="Admin"
-                className="w-12 h-12 rounded-full object-cover"
+                className="w-9 h-9 sm:w-12 sm:h-12 rounded-full object-cover"
               />
 
               <span
-                className="text-[#555555]"
+                className="text-[#555555] text-sm"
                 style={{ fontFamily: 'Playpen Sans' }}
               >
                 Admin
@@ -137,7 +137,7 @@ function AdminDashboard() {
             </button>
 
             {showProfile && (
-              <div className="absolute right-0 mt-4 w-[220px] bg-white rounded-[20px] shadow-lg p-4 z-50">
+              <div className="absolute right-0 mt-4 w-[180px] sm:w-[220px] bg-white rounded-[20px] shadow-lg p-4 z-50">
                 <button className="w-full text-left px-4 py-3 hover:bg-[#F5F5F5] rounded-xl transition">
                   Paramètres
                 </button>
@@ -157,11 +157,19 @@ function AdminDashboard() {
         </div>
       </header>
 
+      {/* TITRE visible uniquement sur mobile */}
+      <h1
+        className="block md:hidden text-[20px] font-bold text-[#555555] mt-4 text-center"
+        style={{ fontFamily: 'Playpen Sans' }}
+      >
+        Dashboard Admin
+      </h1>
+
       {/* WELCOME */}
 
-      <div className="mt-12">
+      <div className="mt-8 sm:mt-12">
         <h2
-          className="text-[38px] font-bold text-[#555555]"
+          className="text-[24px] sm:text-[38px] font-bold text-[#555555]"
           style={{ fontFamily: 'Playpen Sans' }}
         >
           Bonjour Admin
@@ -172,29 +180,29 @@ function AdminDashboard() {
 
       {/* STATS */}
 
-      <div className="grid grid-cols-4 gap-8 mt-10">
-        <div className="bg-[#F56B6B] text-white rounded-[25px] p-6 shadow-md">
-          <h1 className="text-[40px] font-bold">{reservations.length}</h1>
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-4 sm:gap-8 mt-8 sm:mt-10">
+        <div className="bg-[#F56B6B] text-white rounded-[25px] p-4 sm:p-6 shadow-md">
+          <h1 className="text-[32px] sm:text-[40px] font-bold">{reservations.length}</h1>
 
           <p>Réservations</p>
         </div>
 
-        <div className="bg-white rounded-[25px] p-6 shadow-md">
-          <h1 className="text-[40px] font-bold text-[#555555]">
+        <div className="bg-white rounded-[25px] p-4 sm:p-6 shadow-md">
+          <h1 className="text-[32px] sm:text-[40px] font-bold text-[#555555]">
             {[...new Set(reservations.map((r) => r.user_id))].length}
           </h1>
 
           <p className="text-[#555555]">Étudiants</p>
         </div>
 
-        <div className="bg-white rounded-[25px] p-6 shadow-md">
-          <h1 className="text-[40px] font-bold text-[#555555]">{machines.length}</h1>
+        <div className="bg-white rounded-[25px] p-4 sm:p-6 shadow-md">
+          <h1 className="text-[32px] sm:text-[40px] font-bold text-[#555555]">{machines.length}</h1>
 
           <p className="text-[#555555]">Machines</p>
         </div>
 
-        <div className="bg-white rounded-[25px] p-6 shadow-md">
-          <h1 className="text-[40px] font-bold text-[#555555]">
+        <div className="bg-white rounded-[25px] p-4 sm:p-6 shadow-md">
+          <h1 className="text-[32px] sm:text-[40px] font-bold text-[#555555]">
             {todayReservations.length}
           </h1>
 
@@ -204,13 +212,13 @@ function AdminDashboard() {
 
       {/* CONTENT */}
 
-      <div className="grid grid-cols-2 gap-10 mt-14">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6 sm:gap-10 mt-10 sm:mt-14">
         {/* MACHINES */}
 
-        <div className="bg-white rounded-[30px] p-8 shadow-sm">
-          <div className="flex justify-between items-center mb-8">
+        <div className="bg-white rounded-[30px] p-5 sm:p-8 shadow-sm">
+          <div className="flex justify-between items-center mb-6 sm:mb-8">
             <h2
-              className="text-[30px] font-bold text-[#555555]"
+              className="text-[22px] sm:text-[30px] font-bold text-[#555555]"
               style={{ fontFamily: 'Playpen Sans' }}
             >
               Gestion des machines
@@ -223,10 +231,10 @@ function AdminDashboard() {
               return (
                 <div
                   key={machine.id}
-                  className="flex justify-between items-center bg-[#F9F9F9] p-5 rounded-[20px]"
+                  className="flex justify-between items-center bg-[#F9F9F9] p-4 sm:p-5 rounded-[20px]"
                 >
                   <div>
-                    <h3 className="font-bold text-[#555555] text-lg">
+                    <h3 className="font-bold text-[#555555] text-base sm:text-lg">
                       {machine.numero}
                     </h3>
 
@@ -244,7 +252,7 @@ function AdminDashboard() {
 
                   <button
                     onClick={() => deleteMachine(machine.id)}
-                    className="bg-red-100 text-red-500 px-4 py-2 rounded-[12px] hover:bg-red-200 transition"
+                    className="bg-red-100 text-red-500 px-3 sm:px-4 py-2 rounded-[12px] hover:bg-red-200 transition text-sm"
                   >
                     Supprimer
                   </button>
@@ -256,10 +264,10 @@ function AdminDashboard() {
 
         {/* ALERT SECTION */}
 
-        <div className="bg-white p-8 rounded-[30px] shadow-md mt-10">
+        <div className="bg-white p-5 sm:p-8 rounded-[30px] shadow-md mt-0 sm:mt-10">
           <div className="flex justify-between items-center mb-6">
             <h2
-              className="text-[30px] font-bold text-[#555555]"
+              className="text-[22px] sm:text-[30px] font-bold text-[#555555]"
               style={{ fontFamily: 'Playpen Sans' }}
             >
               Envoyer une alerte
@@ -275,7 +283,7 @@ function AdminDashboard() {
 
           <button
             onClick={handleSendAlert}
-            className="mt-5 bg-[#F56B6B] text-white px-8 py-4 rounded-[15px] font-bold hover:scale-[1.02] transition"
+            className="mt-5 bg-[#F56B6B] text-white px-6 sm:px-8 py-4 rounded-[15px] font-bold hover:scale-[1.02] transition"
             style={{ fontFamily: 'Playpen Sans' }}
           >
             Envoyer l'alerte
@@ -284,10 +292,10 @@ function AdminDashboard() {
 
         {/* RESERVATIONS */}
 
-        <div className="bg-white rounded-[30px] p-8 shadow-sm">
-          <div className="flex justify-between items-center mb-8">
+        <div className="bg-white rounded-[30px] p-5 sm:p-8 shadow-sm">
+          <div className="flex justify-between items-center mb-6 sm:mb-8">
             <h2
-              className="text-[30px] font-bold text-[#555555]"
+              className="text-[22px] sm:text-[30px] font-bold text-[#555555]"
               style={{ fontFamily: 'Playpen Sans' }}
             >
               Réservations récentes
@@ -300,7 +308,7 @@ function AdminDashboard() {
             {reservations.slice(0, 5).map((reservation) => (
               <div
                 key={reservation.id}
-                className="bg-[#F9F9F9] p-5 rounded-[20px] hover:shadow-md transition cursor-pointer"
+                className="bg-[#F9F9F9] p-4 sm:p-5 rounded-[20px] hover:shadow-md transition cursor-pointer"
                 onClick={() =>
                   alert(
                     `Étudiant : ${reservation.user?.name} ${reservation.user?.prenom}
@@ -313,7 +321,7 @@ Statut : ${reservation.statut}`
               >
                 <div className="flex justify-between items-center">
                   <div>
-                    <h3 className="font-bold text-[#555555] text-lg">
+                    <h3 className="font-bold text-[#555555] text-base sm:text-lg">
                       {reservation.user?.name} {reservation.user?.prenom}
                     </h3>
 
@@ -324,7 +332,7 @@ Statut : ${reservation.statut}`
                   </div>
 
                   <span
-                    className={`px-4 py-2 rounded-full text-sm font-bold
+                    className={`px-3 sm:px-4 py-2 rounded-full text-sm font-bold
                     ${
                       reservation.statut === 'confirme'
                         ? 'bg-green-100 text-green-600'

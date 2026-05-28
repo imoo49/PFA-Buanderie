@@ -17,8 +17,9 @@ use App\Http\Controllers\CreneauController;
 Route::post('/register', [AuthController::class, 'register']);
 Route::post('/login',    [AuthController::class, 'login']);
 
-// Vérification email ← DÉPLACÉ ICI (public, pas besoin d'être connecté)
+// Vérification email
 Route::get('/email/verify/{id}/{hash}', function (Request $request, $id, $hash) {
+
     $user = \App\Models\User::findOrFail($id);
 
     if (!hash_equals((string) $hash, sha1($user->getEmailForVerification()))) {
@@ -51,13 +52,21 @@ Route::middleware('auth:sanctum')->group(function () {
     // LOGOUT
     Route::post('/logout', [AuthController::class, 'logout']);
 
-    // Renvoyer l'email de vérification
+    // EMAIL
     Route::post('/email/resend', function (Request $request) {
+
         if ($request->user()->hasVerifiedEmail()) {
-            return response()->json(['message' => 'Email déjà vérifié']);
+            return response()->json([
+                'message' => 'Email déjà vérifié'
+            ]);
         }
+
         $request->user()->sendEmailVerificationNotification();
-        return response()->json(['message' => 'Email de vérification renvoyé']);
+
+        return response()->json([
+            'message' => 'Email de vérification renvoyé'
+        ]);
+
     })->middleware('throttle:6,1');
 
     /*
@@ -74,8 +83,15 @@ Route::middleware('auth:sanctum')->group(function () {
     |--------------------------------------------------------------------------
     */
 
-    Route::get('/machines',      [MachineController::class, 'index']);
+    Route::get('/machines', [MachineController::class, 'index']);
+
     Route::get('/machines/{id}', [MachineController::class, 'show']);
+
+    Route::post('/machines', [MachineController::class, 'store']);
+
+    Route::delete('/machines/{id}', [MachineController::class, 'destroy']);
+
+    Route::patch('/machines/{id}/panne', [MachineController::class, 'togglePanne']);
 
     /*
     |--------------------------------------------------------------------------
@@ -83,7 +99,8 @@ Route::middleware('auth:sanctum')->group(function () {
     |--------------------------------------------------------------------------
     */
 
-    Route::get('/creneaux',             [CreneauController::class, 'index']);
+    Route::get('/creneaux', [CreneauController::class, 'index']);
+
     Route::get('/creneaux/disponibles', [CreneauController::class, 'disponibles']);
 
 });

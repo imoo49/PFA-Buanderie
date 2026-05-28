@@ -12,26 +12,30 @@ function AdminDashboard() {
   const [reservations, setReservations] = useState([])
   const [loading, setLoading] = useState(true)
 
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const token = localStorage.getItem('token')
-        const headers = { Authorization: `Bearer ${token}` }
+  const [showAddModal, setShowAddModal] = useState(false)
+  const [newNumero, setNewNumero] = useState('')
+  const [newType, setNewType] = useState('lave-linge')
+  const [newCapacite, setNewCapacite] = useState('')
+  const [addLoading, setAddLoading] = useState(false)
+  const [addError, setAddError] = useState('')
 
-        const [machinesRes, reservationsRes] = await Promise.all([
-          api.get('/machines', { headers }),
-          api.get('/reservations', { headers }),
-        ])
+  const fetchData = async () => {
+    try {
+      const [machinesRes, reservationsRes] = await Promise.all([
+        api.get('/machines'),
+        api.get('/reservations').catch(() => ({ data: [] })),
+      ])
 
-        setMachines(machinesRes.data)
-        setReservations(reservationsRes.data)
-      } catch (error) {
-        console.error('Erreur chargement admin :', error)
-      } finally {
-        setLoading(false)
-      }
+      setMachines(machinesRes.data)
+      setReservations(reservationsRes.data)
+    } catch (error) {
+      console.error('Erreur chargement admin :', error)
+    } finally {
+      setLoading(false)
     }
+  }
 
+  useEffect(() => {
     fetchData()
   }, [])
 
@@ -64,8 +68,51 @@ function AdminDashboard() {
     setAlertMessage('')
   }
 
-  const deleteMachine = (id) => {
-    setMachines(machines.filter((machine) => machine.id !== id))
+  const deleteMachine = async (id) => {
+    if (!window.confirm('Supprimer cette machine ?')) return
+    try {
+      await api.delete(`/machines/${id}`)
+      setMachines(machines.filter((machine) => machine.id !== id))
+    } catch (error) {
+      alert('Erreur lors de la suppression')
+      console.error(error)
+    }
+  }
+
+  const togglePanne = async (machine) => {
+    try {
+      const response = await api.patch(`/machines/${machine.id}/panne`)
+      setMachines(machines.map((m) => (m.id === machine.id ? response.data : m)))
+    } catch (error) {
+      alert('Erreur lors du changement de statut')
+      console.error(error)
+    }
+  }
+
+  const handleAddMachine = async (e) => {
+    e.preventDefault()
+    if (!newNumero || !newCapacite) {
+      setAddError('Veuillez remplir tous les champs')
+      return
+    }
+    setAddLoading(true)
+    setAddError('')
+    try {
+      const response = await api.post('/machines', {
+        numero: newNumero,
+        type: newType,
+        capacite: parseInt(newCapacite),
+      })
+      setMachines([...machines, response.data])
+      setShowAddModal(false)
+      setNewNumero('')
+      setNewType('lave-linge')
+      setNewCapacite('')
+    } catch (error) {
+      setAddError(error.response?.data?.message || 'Erreur lors de l\'ajout')
+    } finally {
+      setAddLoading(false)
+    }
   }
 
   if (loading) {
@@ -78,6 +125,91 @@ function AdminDashboard() {
 
   return (
     <div className="min-h-screen bg-[#F5F5F5] p-4 sm:p-6">
+
+      {/* ADD MACHINE MODAL */}
+
+      {showAddModal && (
+        <div className="fixed inset-0 bg-black/40 z-50 flex items-center justify-center px-4">
+          <div className="bg-white rounded-[30px] shadow-2xl p-8 w-full max-w-[480px]">
+            <h2
+              className="text-[26px] font-bold text-[#555555] mb-6"
+              style={{ fontFamily: 'Playpen Sans' }}
+            >
+              Ajouter une machine
+            </h2>
+
+            {addError && (
+              <div className="bg-red-100 text-red-500 p-3 rounded-xl mb-5 text-sm">
+                {addError}
+              </div>
+            )}
+
+            <form onSubmit={handleAddMachine}>
+
+              <div className="mb-5">
+                <label className="block text-[18px] text-[#555555] mb-2" style={{ fontFamily: 'Playpen Sans' }}>
+                  Numéro
+                </label>
+                <input
+                  type="text"
+                  placeholder="Ex : M-05"
+                  value={newNumero}
+                  onChange={(e) => setNewNumero(e.target.value)}
+                  className="w-full h-[50px] rounded-[12px] px-4 bg-white border border-[#D9D9D9] outline-none shadow-sm"
+                />
+              </div>
+
+              <div className="mb-5">
+                <label className="block text-[18px] text-[#555555] mb-2" style={{ fontFamily: 'Playpen Sans' }}>
+                  Type
+                </label>
+                <select
+                  value={newType}
+                  onChange={(e) => setNewType(e.target.value)}
+                  className="w-full h-[50px] rounded-[12px] px-4 bg-white border border-[#D9D9D9] outline-none shadow-sm"
+                >
+                  <option value="lave-linge">Lave-linge</option>
+                  <option value="seche-linge">Sèche-linge</option>
+                </select>
+              </div>
+
+              <div className="mb-8">
+                <label className="block text-[18px] text-[#555555] mb-2" style={{ fontFamily: 'Playpen Sans' }}>
+                  Capacité (kg)
+                </label>
+                <input
+                  type="number"
+                  placeholder="Ex : 7"
+                  value={newCapacite}
+                  onChange={(e) => setNewCapacite(e.target.value)}
+                  min="1"
+                  className="w-full h-[50px] rounded-[12px] px-4 bg-white border border-[#D9D9D9] outline-none shadow-sm"
+                />
+              </div>
+
+              <div className="flex gap-4">
+                <button
+                  type="button"
+                  onClick={() => { setShowAddModal(false); setAddError('') }}
+                  className="flex-1 py-3 rounded-[15px] border-2 border-[#D9D9D9] text-[#555555] font-bold hover:bg-gray-50 transition"
+                  style={{ fontFamily: 'Playpen Sans' }}
+                >
+                  Annuler
+                </button>
+                <button
+                  type="submit"
+                  disabled={addLoading}
+                  className="flex-1 py-3 rounded-[15px] bg-[#F56B6B] text-white font-bold hover:scale-[1.02] transition disabled:opacity-60"
+                  style={{ fontFamily: 'Playpen Sans' }}
+                >
+                  {addLoading ? 'Ajout...' : 'Ajouter'}
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
+
       {/* HEADER */}
 
       <header className="flex justify-between items-start">
@@ -223,39 +355,68 @@ function AdminDashboard() {
             >
               Gestion des machines
             </h2>
+
+            <button
+              onClick={() => setShowAddModal(true)}
+              className="bg-[#F56B6B] text-white px-4 py-2 rounded-[12px] hover:scale-[1.02] transition text-sm font-bold"
+              style={{ fontFamily: 'Playpen Sans' }}
+            >
+              + Ajouter
+            </button>
           </div>
 
           <div className="space-y-5">
             {machines.map((machine) => {
               const status = getMachineStatus(machine.id)
+              const isPanne = machine.statut === 'en_panne'
+
               return (
                 <div
                   key={machine.id}
-                  className="flex justify-between items-center bg-[#F9F9F9] p-4 sm:p-5 rounded-[20px]"
+                  className="bg-[#F9F9F9] p-4 sm:p-5 rounded-[20px]"
                 >
-                  <div>
-                    <h3 className="font-bold text-[#555555] text-base sm:text-lg">
-                      {machine.numero}
-                    </h3>
+                  <div className="flex justify-between items-center">
+                    <div>
+                      <h3 className="font-bold text-[#555555] text-base sm:text-lg">
+                        {machine.numero}
+                      </h3>
 
-                    <span
-                      className={`px-4 py-1 rounded-full text-sm font-bold
-                      ${
-                        status === 'Libre'
-                          ? 'bg-green-100 text-green-600'
-                          : 'bg-yellow-100 text-yellow-600'
-                      }`}
-                    >
-                      {status}
-                    </span>
+                      <p className="text-gray-400 text-sm">{machine.type} · {machine.capacite} kg</p>
+
+                      <span
+                        className={`inline-block mt-1 px-3 py-0.5 rounded-full text-xs font-bold
+                        ${
+                          isPanne
+                            ? 'bg-orange-100 text-orange-600'
+                            : status === 'Libre'
+                            ? 'bg-green-100 text-green-600'
+                            : 'bg-yellow-100 text-yellow-600'
+                        }`}
+                      >
+                        {isPanne ? 'En panne' : status}
+                      </span>
+                    </div>
+
+                    <div className="flex flex-col gap-2 items-end">
+                      <button
+                        onClick={() => togglePanne(machine)}
+                        className={`px-3 py-1.5 rounded-[10px] text-xs font-bold transition
+                          ${isPanne
+                            ? 'bg-green-100 text-green-600 hover:bg-green-200'
+                            : 'bg-orange-100 text-orange-600 hover:bg-orange-200'
+                          }`}
+                      >
+                        {isPanne ? 'Remettre en service' : 'Signaler panne'}
+                      </button>
+
+                      <button
+                        onClick={() => deleteMachine(machine.id)}
+                        className="bg-red-100 text-red-500 px-3 py-1.5 rounded-[10px] hover:bg-red-200 transition text-xs font-bold"
+                      >
+                        Supprimer
+                      </button>
+                    </div>
                   </div>
-
-                  <button
-                    onClick={() => deleteMachine(machine.id)}
-                    className="bg-red-100 text-red-500 px-3 sm:px-4 py-2 rounded-[12px] hover:bg-red-200 transition text-sm"
-                  >
-                    Supprimer
-                  </button>
                 </div>
               )
             })}
@@ -346,6 +507,10 @@ Statut : ${reservation.statut}`
                 </div>
               </div>
             ))}
+
+            {reservations.length === 0 && (
+              <p className="text-gray-400 text-center py-4">Aucune réservation</p>
+            )}
           </div>
         </div>
       </div>

@@ -7,9 +7,9 @@ import notificationIcon from '../assets/notification-icon.png'
 import logoBuanderie from '../assets/logo-buanderie.png'
 import profil from '../assets/profil.png'
 import ChatbotUI from "../components/ChatbotUI"
-
+import { usePushNotifications } from '../hooks/usePushNotifications'
 function StudentDashboard() {
-
+  usePushNotifications()
   const navigate = useNavigate()
 
   const [studentAlert, setStudentAlert] = useState('')

@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react'
 import { Link } from 'react-router-dom'
 import api from '../api/api'
+import { useNotifications } from '../context/NotificationContext'
 
 import logoBuanderie from '../assets/logo-buanderie.png'
 import logoEnsias from '../assets/logo-ensias.png'
@@ -17,6 +18,8 @@ function MachinesPage() {
   const [showProfileMenu, setShowProfileMenu] = useState(false)
 
   const [showNotifications, setShowNotifications] = useState(false)
+
+  const { dbNotifications, markAsRead } = useNotifications()
 
   const fetchMachines = async () => {
 
@@ -98,19 +101,66 @@ function MachinesPage() {
 
           {/* NOTIFICATIONS */}
 
-          <button
-            onClick={() =>
-              setShowNotifications(!showNotifications)
-            }
-          >
+          <div className="relative">
 
-            <img
-              src={notificationIcon}
-              alt="Notifications"
-              className="w-8 h-8 sm:w-10 sm:h-10 hover:scale-110 transition"
-            />
+            <button
+              onClick={() =>
+                setShowNotifications(!showNotifications)
+              }
+              className="relative"
+            >
 
-          </button>
+              <img
+                src={notificationIcon}
+                alt="Notifications"
+                className="w-8 h-8 sm:w-10 sm:h-10 hover:scale-110 transition"
+              />
+
+              {dbNotifications.length > 0 && (
+                <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">
+                  {dbNotifications.length}
+                </span>
+              )}
+
+            </button>
+
+            {showNotifications && (
+
+              <div className="absolute right-0 mt-4 w-[260px] sm:w-[300px] bg-white rounded-[20px] shadow-lg p-4 z-50">
+
+                <h3 className="font-bold text-red-500 mb-4 text-lg">Notifications</h3>
+
+                <div className="space-y-3">
+
+                  {dbNotifications.length > 0 ? (
+
+                    dbNotifications.map((n) => (
+
+                      <div
+                        key={n.id}
+                        onClick={() => markAsRead(n.id)}
+                        className="bg-[#F5F5F5] p-3 rounded-xl text-sm text-[#555555] cursor-pointer hover:bg-red-50 transition"
+                      >
+                        {n.data?.message}
+                      </div>
+
+                    ))
+
+                  ) : (
+
+                    <div className="bg-[#F5F5F5] p-3 rounded-xl text-sm text-[#555555]">
+                      Aucune notification
+                    </div>
+
+                  )}
+
+                </div>
+
+              </div>
+
+            )}
+
+          </div>
 
           {/* PROFILE */}
 

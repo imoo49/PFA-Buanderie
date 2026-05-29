@@ -1,4 +1,5 @@
 import { Routes, Route, Navigate } from 'react-router-dom'
+import { NotificationProvider } from './context/NotificationContext'   // ← AJOUTÉ
 
 import LandingPage from './pages/LandingPage'
 import StudentRegister from './pages/StudentRegister'
@@ -15,7 +16,6 @@ import PersonalDataPage from './pages/PersonalDataPage'
 import GirlsDay from './pages/GirlsDay'
 import BoysDay from './pages/BoysDay'
 
-// Protège les pages étudiants : redirige vers login si pas connecté
 function StudentRoute({ children }) {
   const token = localStorage.getItem('token')
   const user = JSON.parse(localStorage.getItem('user') || '{}')
@@ -25,7 +25,6 @@ function StudentRoute({ children }) {
   return children
 }
 
-// Protège les pages admin : redirige vers login admin si pas connecté en tant qu'admin
 function AdminRoute({ children }) {
   const token = localStorage.getItem('token')
   const user = JSON.parse(localStorage.getItem('user') || '{}')
@@ -46,24 +45,24 @@ function App() {
       <Route path="/student/register" element={<StudentRegister />} />
       <Route path="/student/login"    element={<StudentLogin />} />
 
-      {/* STUDENT — pages protégées */}
-      <Route path="/student/dashboard"   element={<StudentRoute><StudentDashboard /></StudentRoute>} />
-      <Route path="/machines"            element={<StudentRoute><MachinesPage /></StudentRoute>} />
-      <Route path="/calendar"            element={<StudentRoute><CalendarPage /></StudentRoute>} />
-      <Route path="/slots"               element={<StudentRoute><SlotsPage /></StudentRoute>} />
-      <Route path="/reservation-summary" element={<StudentRoute><ReservationSummary /></StudentRoute>} />
-      <Route path="/history"             element={<StudentRoute><HistoryPage /></StudentRoute>} />
-      <Route path="/personal-data"       element={<StudentRoute><PersonalDataPage /></StudentRoute>} />
-      <Route path="/girls-day"           element={<StudentRoute><GirlsDay /></StudentRoute>} />
-      <Route path="/boys-day"            element={<StudentRoute><BoysDay /></StudentRoute>} />
+      {/* STUDENT — pages protégées (toutes partagent les notifs) */}
+      <Route path="/student/dashboard"   element={<StudentRoute><NotificationProvider><StudentDashboard /></NotificationProvider></StudentRoute>} />
+      <Route path="/machines"            element={<StudentRoute><NotificationProvider><MachinesPage /></NotificationProvider></StudentRoute>} />
+      <Route path="/calendar"            element={<StudentRoute><NotificationProvider><CalendarPage /></NotificationProvider></StudentRoute>} />
+      <Route path="/slots"               element={<StudentRoute><NotificationProvider><SlotsPage /></NotificationProvider></StudentRoute>} />
+      <Route path="/reservation-summary" element={<StudentRoute><NotificationProvider><ReservationSummary /></NotificationProvider></StudentRoute>} />
+      <Route path="/history"             element={<StudentRoute><NotificationProvider><HistoryPage /></NotificationProvider></StudentRoute>} />
+      <Route path="/personal-data"       element={<StudentRoute><NotificationProvider><PersonalDataPage /></NotificationProvider></StudentRoute>} />
+      <Route path="/girls-day"           element={<StudentRoute><NotificationProvider><GirlsDay /></NotificationProvider></StudentRoute>} />
+      <Route path="/boys-day"            element={<StudentRoute><NotificationProvider><BoysDay /></NotificationProvider></StudentRoute>} />
 
       {/* ADMIN — page publique */}
       <Route path="/admin/login" element={<AdminLogin />} />
 
       {/* ADMIN — page protégée */}
       <Route path="/admin/dashboard" element={<AdminRoute><AdminDashboard /></AdminRoute>} />
-      {/* ROUTE INCONNUE → redirige vers l'accueil */}
-<Route path="*" element={<Navigate to="/" replace />} />
+
+      <Route path="*" element={<Navigate to="/" replace />} />
     </Routes>
   )
 }

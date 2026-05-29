@@ -6,6 +6,7 @@ import profil from '../assets/profil.png'
 import api from '../api/api'
 
 function AdminDashboard() {
+  const [currentAlert, setCurrentAlert] = useState(localStorage.getItem('studentAlert') || '')
   const [alertMessage, setAlertMessage] = useState('')
   const [showProfile, setShowProfile] = useState(false)
   const [machines, setMachines] = useState([])
@@ -55,18 +56,22 @@ function AdminDashboard() {
     return occupied ? 'Occupée' : 'Libre'
   }
 
-  const handleSendAlert = () => {
-    if (!alertMessage) {
-      alert('Veuillez écrire une alerte')
-      return
-    }
-
-    localStorage.setItem('studentAlert', alertMessage)
-
-    alert('Alerte envoyée aux étudiants')
-
-    setAlertMessage('')
+const handleSendAlert = () => {
+  if (!alertMessage) {
+    alert('Veuillez écrire une alerte')
+    return
   }
+  localStorage.setItem('studentAlert', alertMessage)
+  setCurrentAlert(alertMessage)
+  alert('Alerte envoyée aux étudiants')
+  setAlertMessage('')
+}
+
+const handleDeleteAlert = () => {
+  if (!window.confirm('Voulez-vous vraiment supprimer cette alerte ?')) return
+  localStorage.removeItem('studentAlert')
+  setCurrentAlert('')
+}
 
   const deleteMachine = async (id) => {
     if (!window.confirm('Supprimer cette machine ?')) return
@@ -423,33 +428,55 @@ function AdminDashboard() {
           </div>
         </div>
 
-        {/* ALERT SECTION */}
+{/* ALERT SECTION */}
 
-        <div className="bg-white p-5 sm:p-8 rounded-[30px] shadow-md mt-0 sm:mt-10">
-          <div className="flex justify-between items-center mb-6">
-            <h2
-              className="text-[22px] sm:text-[30px] font-bold text-[#555555]"
-              style={{ fontFamily: 'Playpen Sans' }}
-            >
-              Envoyer une alerte
-            </h2>
-          </div>
+<div className="bg-white p-5 sm:p-8 rounded-[30px] shadow-md mt-0 sm:mt-10">
 
-          <textarea
-            placeholder="Ex: La buanderie sera fermée demain de 14h à 18h."
-            value={alertMessage}
-            onChange={(e) => setAlertMessage(e.target.value)}
-            className="w-full h-[120px] rounded-[20px] border border-[#E5E5E5] p-5 outline-none resize-none"
-          />
+  <div className="flex justify-between items-center mb-6">
+    <h2
+      className="text-[22px] sm:text-[30px] font-bold text-[#555555]"
+      style={{ fontFamily: 'Playpen Sans' }}
+    >
+      Envoyer une alerte
+    </h2>
+  </div>
 
-          <button
-            onClick={handleSendAlert}
-            className="mt-5 bg-[#F56B6B] text-white px-6 sm:px-8 py-4 rounded-[15px] font-bold hover:scale-[1.02] transition"
-            style={{ fontFamily: 'Playpen Sans' }}
-          >
-            Envoyer l'alerte
-          </button>
+  {/* ALERTE ACTIVE */}
+
+  {currentAlert && (
+    <div className="bg-[#FFF3CD] border border-[#FFE69C] rounded-[20px] p-5 mb-6">
+      <div className="flex justify-between items-start gap-4">
+        <div>
+          <p className="font-bold text-[#856404] mb-1">⚠️ Alerte active :</p>
+          <p className="text-[#856404] text-sm">{currentAlert}</p>
         </div>
+        <button
+          onClick={handleDeleteAlert}
+          className="shrink-0 bg-red-100 text-red-500 px-3 py-1.5 rounded-[10px] text-xs font-bold hover:bg-red-200 transition"
+          style={{ fontFamily: 'Playpen Sans' }}
+        >
+          Supprimer
+        </button>
+      </div>
+    </div>
+  )}
+
+  <textarea
+    placeholder="Ex: La buanderie sera fermée demain de 14h à 18h."
+    value={alertMessage}
+    onChange={(e) => setAlertMessage(e.target.value)}
+    className="w-full h-[120px] rounded-[20px] border border-[#E5E5E5] p-5 outline-none resize-none"
+  />
+
+  <button
+    onClick={handleSendAlert}
+    className="mt-5 bg-[#F56B6B] text-white px-6 sm:px-8 py-4 rounded-[15px] font-bold hover:scale-[1.02] transition"
+    style={{ fontFamily: 'Playpen Sans' }}
+  >
+    Envoyer l'alerte
+  </button>
+
+</div>
 
         {/* RESERVATIONS */}
 

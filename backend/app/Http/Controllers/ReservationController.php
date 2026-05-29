@@ -30,83 +30,62 @@ class ReservationController extends Controller
         ->get();
     }
 
-    // ➕ Créer réservation
-    public function store(Request $request)
-    {
-        $request->validate([
+// ➕ Créer réservation
+public function store(Request $request)
+{
+    $request->validate([
+        'machine_id'      => 'required|exists:machines,id',
+        'creneau_id'      => 'required|exists:creneaux,id',
+        'dateReservation' => 'required|date',
+        'dureeCycle'      => 'required|integer',
+    ]);
 
-            'machine_id' => 'required|exists:machines,id',
+    $user   = $request->user();
+    $creneau = \App\Models\Creneau::findOrFail($request->creneau_id);
 
-            'creneau_id' => 'required|exists:creneaux,id',
+    // 🔒 Vérifier chevauchement horaire sur cette machine ce jour-là
+    $chevauche = Reservation::where('machine_id', $request->machine_id)
+        ->where('statut', '!=', 'annulee')
+        ->whereHas('creneau', function ($q) use ($creneau) {
+            $q->where('date', $creneau->date)
+              ->where('heureDebut', '<', $creneau->heureFin)
+              ->where('heureFin', '>', $creneau->heureDebut);
+        })
+        ->exists();
 
-            'dateReservation' => 'required|date',
-
-            'dureeCycle' => 'required|integer',
-        ]);
-
-        $user = $request->user();
-
-        // 🔒 vérifier si créneau déjà réservé
-        $existe = Reservation::where('machine_id', $request->machine_id)
-
-            ->where('creneau_id', $request->creneau_id)
-
-            ->where('dateReservation', $request->dateReservation)
-
-            ->where('statut', '!=', 'annulee')
-
-            ->exists();
-
-        if ($existe) {
-
-            return response()->json([
-                'message' => 'Ce créneau est déjà réservé'
-            ], 409);
-        }
-
-        // 🔒 étudiant déjà réservé ce jour
-        $dejaReserve = Reservation::where('user_id', $user->id)
-
-            ->where('dateReservation', $request->dateReservation)
-
-            ->where('statut', '!=', 'annulee')
-
-            ->exists();
-
-        if ($dejaReserve) {
-
-            return response()->json([
-                'message' => 'Vous avez déjà une réservation ce jour'
-            ], 409);
-        }
-
-        // création réservation
-        $reservation = Reservation::create([
-
-            'user_id' => $user->id,
-
-            'machine_id' => $request->machine_id,
-
-            'creneau_id' => $request->creneau_id,
-
-            'dateReservation' => $request->dateReservation,
-
-            'dureeCycle' => $request->dureeCycle,
-
-            'statut' => 'en_attente',
-        ]);
-
+    if ($chevauche) {
         return response()->json([
-
-            'message' => 'Réservation créée avec succès',
-
-            'reservation' => $reservation->load([
-                'machine',
-                'creneau'
-            ])
-
-        ], 201);
+            'message' => 'Ce créneau est déjà réservé ou chevauche une réservation existante'
+        ], 409);
     }
+
+    // 🔒 Étudiant a déjà une réservation ce jour
+    $dejaReserve = Reservation::where('user_id', $user->id)
+        ->where('dateReservation', $request->dateReservation)
+        ->where('statut', '!=', 'annulee')
+        ->exists();
+
+    if ($dejaReserve) {
+        return response()->json([
+            'message' => 'Vous avez déjà une réservation ce jour'
+        ], 409);
+    }
+
+    // Création de la réservation
+    $reservation = Reservation::create([
+        'user_id'         => $user->id,
+        'machine_id'      => $request->machine_id,
+        'creneau_id'      => $request->creneau_id,
+        'dateReservation' => $request->dateReservation,
+        'dureeCycle'      => $request->dureeCycle,
+        'statut'          => 'en_attente',
+    ]);
+
+    return response()->json([
+        'message'     => 'Réservation créée avec succès',
+        'reservation' => $reservation->load(['machine', 'creneau'])
+    ], 201);
+}
 
     // 🔍 afficher réservation
     public function show(Request $request, $id)

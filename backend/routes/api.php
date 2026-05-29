@@ -102,6 +102,10 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/creneaux', [CreneauController::class, 'index']);
 
     Route::get('/creneaux/disponibles', [CreneauController::class, 'disponibles']);
+    // CRÉNEAUX
+Route::get('/creneaux/generer', [CreneauController::class, 'generer']); // ← NOUVEAU
+Route::get('/creneaux', [CreneauController::class, 'index']);
+Route::get('/creneaux/disponibles', [CreneauController::class, 'disponibles']);
     //chatbot
     Route::post('/chat', [ChatController::class, 'chat']);
 });

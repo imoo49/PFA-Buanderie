@@ -79,11 +79,10 @@ class ChatController extends Controller
             str_contains($message, 'séchage') ||
             str_contains($message, 'sechage')
         ) {
-            // 1. Récupérer la météo réelle
             $weatherResponse = Http::timeout(10)->get(
                 'https://api.openweathermap.org/data/2.5/weather',
                 [
-                    'q'     => 'Beni Mellal',
+                    'q'     => 'Rabat',
                     'appid' => env('WEATHER_API_KEY'),
                     'units' => 'metric',
                     'lang'  => 'fr'
@@ -101,7 +100,6 @@ class ChatController extends Controller
             $temp        = $weather['main']['temp'];
             $description = $weather['weather'][0]['description'];
 
-            // 2. Conseil basé sur les valeurs réelles
             if ($humidity > 70) {
                 $conseil = "⚠️ Humidité élevée ({$humidity}%) — le linge séchera lentement, pas idéal.";
             } elseif ($temp < 10) {
@@ -113,7 +111,7 @@ class ChatController extends Controller
             }
 
             return response()->json([
-                'reply' => "Météo actuelle à Beni Mellal : {$description}.\n{$conseil}"
+                'reply' => "Météo actuelle à Rabat : {$description}.\n{$conseil}"
             ]);
         }
 

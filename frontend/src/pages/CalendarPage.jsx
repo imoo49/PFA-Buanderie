@@ -50,7 +50,9 @@ function CalendarPage() {
       return
     }
 
-    localStorage.setItem('selectedDate', date.toISOString())
+    localStorage.setItem('selectedDate', date.toLocaleDateString('en-CA'))
+
+
     navigate('/slots')
   }
 

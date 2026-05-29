@@ -6,7 +6,7 @@ import api from '../api/api'
 import notificationIcon from '../assets/notification-icon.png'
 import logoBuanderie from '../assets/logo-buanderie.png'
 import profil from '../assets/profil.png'
-
+import ChatbotUI from "../components/ChatbotUI"
 function StudentDashboard() {
 
   const navigate = useNavigate()
@@ -554,7 +554,7 @@ function StudentDashboard() {
         </div>
 
       </div>
-
+      <ChatbotUI />
     </div>
 
   )

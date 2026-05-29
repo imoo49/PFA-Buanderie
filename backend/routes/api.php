@@ -7,7 +7,7 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\ReservationController;
 use App\Http\Controllers\MachineController;
 use App\Http\Controllers\CreneauController;
-
+use App\Http\Controllers\ChatController;
 /*
 |--------------------------------------------------------------------------
 | ROUTES PUBLIQUES
@@ -102,5 +102,6 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/creneaux', [CreneauController::class, 'index']);
 
     Route::get('/creneaux/disponibles', [CreneauController::class, 'disponibles']);
-
+    //chatbot
+    Route::post('/chat', [ChatController::class, 'chat']);
 });

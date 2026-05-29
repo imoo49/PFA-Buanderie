@@ -68,26 +68,39 @@ class AuthController extends Controller
     ]);
 
     // =========================
-    // LOGIN ADMIN FIXE
-    // =========================
+// LOGIN ADMIN FIXE
+// =========================
 
-    if (
-        $request->email === 'admin@ensias.ma' &&
-        $request->password === 'admin123'
-    ) {
+if (
+    $request->email === 'admin@ensias.ma' &&
+    $request->password === 'admin123'
+) {
+    // Trouve ou crée l'admin en base pour générer un vrai token Sanctum
+    $adminUser = User::firstOrCreate(
+        ['email' => 'admin@ensias.ma'],
+        [
+            'name' => 'Admin',
+            'prenom' => 'ENSIAS',
+            'password' => Hash::make('admin123'),
+            'role' => 'admin',
+            'email_verified_at' => now(),
+        ]
+    );
 
-        return response()->json([
-            'message' => 'Connexion admin réussie',
-            'token' => 'admin-token',
-            'user' => [
-                'name' => 'Admin',
-                'prenom' => 'ENSIAS',
-                'email' => 'admin@ensias.ma',
-                'role' => 'admin'
-            ]
-        ], 200);
-    }
+    $adminUser->tokens()->delete();
+    $token = $adminUser->createToken('admin_token')->plainTextToken;
 
+    return response()->json([
+        'message' => 'Connexion admin réussie',
+        'token' => $token,
+        'user' => [
+            'name' => 'Admin',
+            'prenom' => 'ENSIAS',
+            'email' => 'admin@ensias.ma',
+            'role' => 'admin'
+        ]
+    ], 200);
+}
     // =========================
     // LOGIN ETUDIANT NORMAL
     // =========================

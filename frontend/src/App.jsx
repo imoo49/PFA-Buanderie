@@ -15,7 +15,8 @@ import HistoryPage from './pages/HistoryPage'
 import PersonalDataPage from './pages/PersonalDataPage'
 import GirlsDay from './pages/GirlsDay'
 import BoysDay from './pages/BoysDay'
-
+import ForgotPasswordPage from './pages/ForgotPasswordPage'
+import ResetPasswordPage from './pages/ResetPasswordPage'
 function StudentRoute({ children }) {
   const token = localStorage.getItem('token')
   const user = JSON.parse(localStorage.getItem('user') || '{}')
@@ -44,7 +45,8 @@ function App() {
       {/* STUDENT — pages publiques */}
       <Route path="/student/register" element={<StudentRegister />} />
       <Route path="/student/login"    element={<StudentLogin />} />
-
+      <Route path="/forgot-password" element={<ForgotPasswordPage />} />
+      <Route path="/reset-password"  element={<ResetPasswordPage />} />
       {/* STUDENT — pages protégées (toutes partagent les notifs) */}
       <Route path="/student/dashboard"   element={<StudentRoute><NotificationProvider><StudentDashboard /></NotificationProvider></StudentRoute>} />
       <Route path="/machines"            element={<StudentRoute><NotificationProvider><MachinesPage /></NotificationProvider></StudentRoute>} />

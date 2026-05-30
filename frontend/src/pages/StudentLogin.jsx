@@ -188,19 +188,27 @@ function StudentLogin() {
             {loading ? 'Connexion...' : 'SE CONNECTER'}
           </button>
 
-          {/* REGISTER */}
+{/* REGISTER */}
+<div className="text-center mt-6 flex flex-col gap-3">
 
-          <div className="text-center mt-6">
+  <Link
+    to="/student/register"
+    className="text-red-500"
+    style={{ fontFamily: 'Playpen Sans' }}
+  >
+    Créer un compte
+  </Link>
 
-            <Link
-              to="/student/register"
-              className="text-red-500"
-              style={{ fontFamily: 'Playpen Sans' }}
-            >
-              Créer un compte
-            </Link>
+  {/* ← AJOUT : lien mot de passe oublié */}
+  <Link
+    to="/forgot-password"
+    className="text-gray-400 text-sm hover:text-gray-600 transition"
+    style={{ fontFamily: 'Playpen Sans' }}
+  >
+    Mot de passe oublié ?
+  </Link>
 
-          </div>
+</div>
 
         </form>
 

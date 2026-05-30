@@ -17,7 +17,8 @@ use App\Http\Controllers\ChatController;
 
 Route::post('/register', [AuthController::class, 'register']);
 Route::post('/login',    [AuthController::class, 'login']);
-
+Route::post('/forgot-password', [AuthController::class, 'forgotPassword']);
+Route::post('/reset-password',  [AuthController::class, 'resetPassword']);
 Route::get('/email/verify/{id}/{hash}', function (Request $request, $id, $hash) {
 
     $user = \App\Models\User::findOrFail($id);

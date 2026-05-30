@@ -6,6 +6,9 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Password;
+use Illuminate\Auth\Events\PasswordReset;
+use Illuminate\Support\Str;
 
 class AuthController extends Controller
 {
@@ -142,4 +145,59 @@ if (
             'message' => 'Déconnexion réussie'
         ], 200);
     }
+    // MOT DE PASSE OUBLIÉ — envoie le lien par email
+public function forgotPassword(Request $request)
+{
+    $request->validate([
+        'email' => 'required|email'
+    ]);
+
+    $status = Password::sendResetLink(
+        $request->only('email')
+    );
+
+    if ($status === Password::RESET_LINK_SENT) {
+        return response()->json([
+            'message' => 'Un lien de réinitialisation a été envoyé à votre adresse email.'
+        ]);
+    }
+
+    return response()->json([
+        'message' => 'Aucun compte trouvé avec cet email.'
+    ], 400);
+}
+
+// RÉINITIALISER LE MOT DE PASSE — avec le token reçu par email
+public function resetPassword(Request $request)
+{
+    $request->validate([
+        'token'                 => 'required',
+        'email'                 => 'required|email',
+        'password'              => 'required|min:6|confirmed',
+        'password_confirmation' => 'required',
+    ]);
+
+    $status = Password::reset(
+        $request->only('email', 'password', 'password_confirmation', 'token'),
+        function (User $user, string $password) {
+            $user->forceFill([
+                'password' => Hash::make($password)
+            ])->setRememberToken(Str::random(60));
+
+            $user->save();
+
+            event(new PasswordReset($user));
+        }
+    );
+
+    if ($status === Password::PASSWORD_RESET) {
+        return response()->json([
+            'message' => 'Mot de passe réinitialisé avec succès.'
+        ]);
+    }
+
+    return response()->json([
+        'message' => 'Lien invalide ou expiré. Veuillez recommencer.'
+    ], 400);
+}
 }

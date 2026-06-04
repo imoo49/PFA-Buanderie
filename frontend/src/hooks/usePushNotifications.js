@@ -1,7 +1,7 @@
 import { useEffect } from 'react'
 import api from '../api/api'
 
-const VAPID_PUBLIC_KEY = 'BM_LNQMhsb5vQz_7Ig-lqIidNEMa9xAUp5T4iyS9IReZTwxf11keyhPFN6yXbTV3TQ-oxcxQK0O3_qiSWsjYHhM'
+const VAPID_PUBLIC_KEY = import.meta.env.VITE_VAPID_PUBLIC_KEY
 
 function urlBase64ToUint8Array(base64String) {
     const padding = '='.repeat((4 - base64String.length % 4) % 4)
